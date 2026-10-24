@@ -85,7 +85,7 @@ export default function ChatPlannerModal() {
 
         {/* Messages Stream */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
-          {chatHistory.map((msg) => (
+          {(chatHistory || []).map((msg) => (
             <ChatMessageItem key={msg.id} message={msg} />
           ))}
 

@@ -12,6 +12,7 @@ import { usePersistentState } from '../hooks/usePersistentState.js';
 import { useThemeMode } from '../hooks/useThemeMode.js';
 import { usePlanManager } from '../hooks/usePlanManager.js';
 import { EventContext } from './useEvent.js';
+export { EventContext };
 
 export function EventProvider({ children }) {
   const { themeMode, toggleTheme } = useThemeMode();
@@ -117,6 +118,8 @@ export function EventProvider({ children }) {
         regeneratingSection,
         error,
         setError,
+        chatHistory,
+        setChatHistory,
         isChatOpen,
         setIsChatOpen,
         serverStatus,

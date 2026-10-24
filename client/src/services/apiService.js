@@ -83,7 +83,7 @@ export async function chatWithPlannerApi(message, currentPlan, chatHistory, meta
     body: JSON.stringify({
       message,
       currentPlan,
-      chatHistory: chatHistory.slice(-8),
+      chatHistory: (chatHistory || []).slice(-8),
       apiKey: customApiKey || undefined,
       ...meta
     })

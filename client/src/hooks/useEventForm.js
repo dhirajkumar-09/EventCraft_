@@ -8,6 +8,7 @@ import {
   validateAllFields,
   validateFormField
 } from '../utils/formValidator.js';
+import { calculateDaysRemaining } from '../utils/sampleData.js';
 
 export { INITIAL_FORM_STATE, validateAllFields, validateFormField };
 
@@ -23,34 +24,68 @@ export function useEventForm(selectedPreset) {
   const [touched, setTouched] = useState({});
   const [prevPreset, setPrevPreset] = useState(selectedPreset);
 
-  // Sync state during render when a new preset is selected
+  // Sync state during render when a new preset prop is passed
   if (selectedPreset !== prevPreset) {
     setPrevPreset(selectedPreset);
     if (selectedPreset) {
+      const data = selectedPreset.data || selectedPreset;
       setFormData({
         ...INITIAL_FORM_STATE,
-        ...selectedPreset,
-        eventDate: selectedPreset.eventDate || '',
-        specialRequests: selectedPreset.specialRequests || ''
+        ...data,
+        eventDate: data.eventDate || '',
+        specialRequests: data.specialRequests || ''
       });
       setErrors({});
       setTouched({});
     }
   }
 
-  const handleChange = useCallback((field, value) => {
+  const handleChange = useCallback((eOrField, directValue) => {
+    let field;
+    let value;
+    if (eOrField && eOrField.target) {
+      field = eOrField.target.name;
+      value = eOrField.target.value;
+    } else {
+      field = eOrField;
+      value = directValue;
+    }
+
     setFormData((prev) => ({ ...prev, [field]: value }));
     const error = validateFormField(field, value);
     setErrors((prev) => ({ ...prev, [field]: error }));
   }, []);
 
-  const handleBlur = useCallback((field) => {
+  const handleBlur = useCallback((eOrField) => {
+    const field = eOrField?.target ? eOrField.target.name : eOrField;
     setTouched((prev) => ({ ...prev, [field]: true }));
     setErrors((prev) => ({
       ...prev,
       [field]: validateFormField(field, formData[field])
     }));
   }, [formData]);
+
+  const handleCurrencyChange = useCallback((currency, currencySymbol) => {
+    setFormData((prev) => ({ ...prev, currency, currencySymbol }));
+  }, []);
+
+  const handleApplyPreset = useCallback((preset) => {
+    const data = preset?.data || preset || {};
+    setFormData({
+      ...INITIAL_FORM_STATE,
+      ...data,
+      eventDate: data.eventDate || '',
+      specialRequests: data.specialRequests || ''
+    });
+    setErrors({});
+    setTouched({});
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setFormData(INITIAL_FORM_STATE);
+    setErrors({});
+    setTouched({});
+  }, []);
 
   const handleSubmit = useCallback((e) => {
     if (e?.preventDefault) e.preventDefault();
@@ -74,19 +109,20 @@ export function useEventForm(selectedPreset) {
     generatePlan(formData);
   }, [formData, generatePlan]);
 
-  const handleReset = useCallback(() => {
-    setFormData(INITIAL_FORM_STATE);
-    setErrors({});
-    setTouched({});
-  }, []);
+  const daysRemaining = calculateDaysRemaining(formData.eventDate);
 
   return {
     formData,
     errors,
     touched,
-    isGenerating,
+    daysRemaining,
+    isLoading: Boolean(isGenerating),
+    isGenerating: Boolean(isGenerating),
     handleChange,
     handleBlur,
+    handleCurrencyChange,
+    handleApplyPreset,
+    handleClearForm: handleReset,
     handleSubmit,
     handleReset
   };

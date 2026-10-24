@@ -84,31 +84,35 @@ export default function OverviewTab() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          {(overview.colorPalette || []).map((swatch, idx) => (
-            <button
-              key={swatch.hex || idx}
-              onClick={() => copyToClipboard(swatch.hex)}
-              className="group p-3 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white/70 dark:bg-slate-800/70 hover:shadow-md transition-all text-left cursor-pointer"
-            >
-              <div
-                className="w-full h-14 rounded-lg shadow-inner mb-2.5 transition-transform group-hover:scale-105 relative flex items-center justify-center"
-                style={{ backgroundColor: swatch.hex }}
+          {(overview.colorPalette || []).map((swatch, idx) => {
+            const hex = typeof swatch === 'string' ? swatch : swatch?.hex;
+            const name = typeof swatch === 'string' ? `Color ${idx + 1}` : swatch?.name;
+            return (
+              <button
+                key={hex || idx}
+                onClick={() => copyToClipboard(hex)}
+                className="group p-3 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white/70 dark:bg-slate-800/70 hover:shadow-md transition-all text-left cursor-pointer"
               >
-                {copiedHex === swatch.hex && (
-                  <span className="p-1.5 rounded-full bg-black/60 text-white backdrop-blur-xs">
-                    <Check className="w-4 h-4" />
-                  </span>
-                )}
-              </div>
-              <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
-                {swatch.name}
-              </p>
-              <p className="text-[11px] font-mono text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                <span>{swatch.hex}</span>
-                <Copy className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </p>
-            </button>
-          ))}
+                <div
+                  className="w-full h-14 rounded-lg shadow-inner mb-2.5 transition-transform group-hover:scale-105 relative flex items-center justify-center"
+                  style={{ backgroundColor: hex }}
+                >
+                  {copiedHex === hex && (
+                    <span className="p-1.5 rounded-full bg-black/60 text-white backdrop-blur-xs">
+                      <Check className="w-4 h-4" />
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                  {name}
+                </p>
+                <p className="text-[11px] font-mono text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                  <span>{hex}</span>
+                  <Copy className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </p>
+              </button>
+            );
+          })}
         </div>
       </div>
 
