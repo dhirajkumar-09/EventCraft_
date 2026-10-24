@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { CheckCircle2, RotateCcw, Trophy, MessageSquareText } from 'lucide-react';
-import { useEvent } from '../context/EventContext.jsx';
+import { useEvent } from '../context/useEvent.js';
 
 export default function ProgressTracker() {
   const {

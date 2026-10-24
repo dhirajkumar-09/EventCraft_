@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Key, X, Check, ShieldCheck, Sparkles, AlertCircle } from 'lucide-react';
-import { useEvent } from '../context/EventContext.jsx';
+import { Key, X, Check, ShieldCheck } from 'lucide-react';
+import { useEvent } from '../context/useEvent.js';
 
 export default function ApiKeyModal({ isOpen, onClose }) {
   const { customApiKey, saveCustomApiKey, serverStatus } = useEvent();

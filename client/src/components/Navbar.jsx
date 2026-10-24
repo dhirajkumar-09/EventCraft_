@@ -1,6 +1,6 @@
 import React from 'react';
-import { Sun, Moon, Key, Share2, Sparkles } from 'lucide-react';
-import { useEvent } from '../context/EventContext.jsx';
+import { Sun, Moon, Key, Share2 } from 'lucide-react';
+import { useEvent } from '../context/useEvent.js';
 import EventCraftLogo from './EventCraftLogo.jsx';
 
 export default function Navbar({ onOpenExport, onOpenApiKey }) {
@@ -21,7 +21,7 @@ export default function Navbar({ onOpenExport, onOpenApiKey }) {
                 EventCraft<span className="text-amber-600 dark:text-amber-400"> AI</span>
               </span>
               <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wide uppercase bg-gradient-to-r from-amber-100 to-rose-100 dark:from-amber-950/60 dark:to-rose-950/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700/70 shadow-xs">
-                Gemini 2.5 Flash
+                Gemini AI
               </span>
             </div>
             <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 hidden md:block">

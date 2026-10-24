@@ -1,6 +1,6 @@
 import React from 'react';
-import { Sparkles, Calendar, DollarSign, Clock } from 'lucide-react';
-import { useEvent } from '../context/EventContext.jsx';
+import { Sparkles } from 'lucide-react';
+import { useEvent } from '../context/useEvent.js';
 
 export default function LoadingSkeleton() {
   const { currentLoadingQuote } = useEvent();
