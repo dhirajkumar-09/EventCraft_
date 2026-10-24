@@ -87,6 +87,22 @@ export function EventProvider({ children }) {
     setCheckedItems({});
   }, [setCheckedItems]);
 
+  const clearPlan = useCallback(() => {
+    setPlan(null);
+    setMeta(null);
+    setCheckedItems({});
+    setChatHistory([]);
+    setError(null);
+    try {
+      localStorage.removeItem(STORAGE_KEYS.PLAN);
+      localStorage.removeItem(STORAGE_KEYS.META);
+      localStorage.removeItem(STORAGE_KEYS.CHECKED);
+      localStorage.removeItem(STORAGE_KEYS.CHAT);
+    } catch {
+      // Graceful fallback in environments with restricted localStorage
+    }
+  }, [setPlan, setMeta, setCheckedItems, setChatHistory, setError]);
+
   const saveCustomApiKey = useCallback((key) => {
     const cleaned = (key || '').trim();
     setCustomApiKey(cleaned);
@@ -108,6 +124,7 @@ export function EventProvider({ children }) {
         checkedItems,
         toggleCheckItem,
         resetProgress,
+        clearPlan,
         totalItemsCount,
         checkedItemsCount,
         progressPercentage,

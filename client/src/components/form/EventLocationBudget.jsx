@@ -30,10 +30,10 @@ export default function EventLocationBudget({
             name="city"
             type="text"
             placeholder="e.g. Jaipur, Delhi, Mumbai, Udaipur..."
-            value={formData.city}
+            value={formData.city || ''}
             onChange={onChange}
             onBlur={onBlur}
-            className={`input-glass w-full rounded-xl px-4 py-3 text-sm focus:outline-hidden ${
+            className={`input-glass w-full rounded-xl px-4 py-3 text-sm focus:outline-hidden bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 ${
               touched.city && errors.city
                 ? 'border-rose-500 dark:border-rose-500'
                 : 'border-slate-300 dark:border-slate-700'
@@ -61,21 +61,21 @@ export default function EventLocationBudget({
         <select
           id="venueType"
           name="venueType"
-          value={formData.venueType}
+          value={formData.venueType || ''}
           onChange={onChange}
           onBlur={onBlur}
-          className={`input-glass w-full rounded-xl px-4 py-3 text-sm focus:outline-hidden ${
+          className={`input-glass w-full rounded-xl px-4 py-3 text-sm focus:outline-hidden bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 ${
             touched.venueType && errors.venueType
               ? 'border-rose-500 dark:border-rose-500'
               : 'border-slate-300 dark:border-slate-700'
           }`}
           aria-invalid={Boolean(touched.venueType && errors.venueType)}
         >
-          <option value="" disabled>
+          <option value="" className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400">
             Choose venue setting...
           </option>
           {VENUE_TYPES.map((venue) => (
-            <option key={venue.value} value={venue.value}>
+            <option key={venue.value} value={venue.value} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
               {venue.label}
             </option>
           ))}
@@ -104,10 +104,10 @@ export default function EventLocationBudget({
             min="5"
             max="50000"
             placeholder="e.g. 250"
-            value={formData.guestCount}
+            value={formData.guestCount ?? ''}
             onChange={onChange}
             onBlur={onBlur}
-            className={`input-glass w-full rounded-xl px-4 py-3 text-sm focus:outline-hidden ${
+            className={`input-glass w-full rounded-xl px-4 py-3 text-sm focus:outline-hidden bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 ${
               touched.guestCount && errors.guestCount
                 ? 'border-rose-500 dark:border-rose-500'
                 : 'border-slate-300 dark:border-slate-700'

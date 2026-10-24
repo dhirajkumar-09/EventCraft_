@@ -1,10 +1,10 @@
 import React from 'react';
-import { Sun, Moon, Key, Share2 } from 'lucide-react';
+import { Sun, Moon, Key, Share2, RotateCcw } from 'lucide-react';
 import { useEvent } from '../context/useEvent.js';
 import EventCraftLogo from './EventCraftLogo.jsx';
 
 export default function Navbar({ onOpenExport, onOpenApiKey }) {
-  const { themeMode, toggleTheme, plan, serverStatus, customApiKey } = useEvent();
+  const { themeMode, toggleTheme, plan, clearPlan, serverStatus, customApiKey } = useEvent();
 
   const isGeminiLive = Boolean(serverStatus?.apiKeyConfigured || customApiKey);
 
@@ -52,6 +52,18 @@ export default function Navbar({ onOpenExport, onOpenApiKey }) {
             >
               <Share2 className="w-3.5 h-3.5" />
               <span>Export & Share</span>
+            </button>
+          )}
+
+          {/* New Event / Start Fresh action */}
+          {plan && (
+            <button
+              onClick={clearPlan}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-rose-100 dark:bg-slate-800 dark:hover:bg-rose-950/60 text-slate-700 hover:text-rose-700 dark:text-slate-300 dark:hover:text-rose-300 border border-slate-200 dark:border-slate-700 hover:border-rose-300 dark:hover:border-rose-800 transition-all cursor-pointer"
+              title="Clear current plan and start fresh"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">New Event</span>
             </button>
           )}
 

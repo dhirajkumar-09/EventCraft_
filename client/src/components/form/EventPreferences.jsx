@@ -39,21 +39,21 @@ export default function EventPreferences({
             <select
               id="cuisineDiet"
               name="cuisineDiet"
-              value={formData.cuisineDiet}
+              value={formData.cuisineDiet || ''}
               onChange={onChange}
               onBlur={onBlur}
-              className={`input-glass w-full rounded-xl px-4 py-3 text-sm focus:outline-hidden ${
+              className={`input-glass w-full rounded-xl px-4 py-3 text-sm focus:outline-hidden bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 ${
                 touched.cuisineDiet && errors.cuisineDiet
                   ? 'border-rose-500 dark:border-rose-500'
                   : 'border-slate-300 dark:border-slate-700'
               }`}
               aria-invalid={Boolean(touched.cuisineDiet && errors.cuisineDiet)}
             >
-              <option value="" disabled>
+              <option value="" className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400">
                 Select catering style...
               </option>
               {CUISINE_DIETS.map((diet) => (
-                <option key={diet.value} value={diet.value}>
+                <option key={diet.value} value={diet.value} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                   {diet.label}
                 </option>
               ))}
@@ -83,10 +83,10 @@ export default function EventPreferences({
               name="themePreference"
               type="text"
               placeholder="e.g. Royal Marigold & Mirrorwork, Pastel Boho, Retro Bollywood..."
-              value={formData.themePreference}
+              value={formData.themePreference || ''}
               onChange={onChange}
               onBlur={onBlur}
-              className="input-glass w-full rounded-xl px-4 py-3 text-sm border-slate-300 dark:border-slate-700 focus:outline-hidden"
+              className="input-glass w-full rounded-xl px-4 py-3 text-sm border-slate-300 dark:border-slate-700 focus:outline-hidden bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
             />
             <Palette className="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5 pointer-events-none" />
           </div>
@@ -110,10 +110,10 @@ export default function EventPreferences({
                 name={id}
                 type="text"
                 placeholder={placeholder}
-                value={formData[id]}
+                value={formData[id] || ''}
                 onChange={onChange}
                 onBlur={onBlur}
-                className="input-glass w-full rounded-xl px-4 py-3 text-sm border-slate-300 dark:border-slate-700 focus:outline-hidden"
+                className="input-glass w-full rounded-xl px-4 py-3 text-sm border-slate-300 dark:border-slate-700 focus:outline-hidden bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
               />
               <Icon className="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5 pointer-events-none" />
             </div>
@@ -136,10 +136,10 @@ export default function EventPreferences({
             name="specialRequests"
             rows="2"
             placeholder="e.g. Authentic live jalebi counter, drone entry shot, wheelchair accessible ramps, eco-friendly favors..."
-            value={formData.specialRequests}
+            value={formData.specialRequests || ''}
             onChange={onChange}
             onBlur={onBlur}
-            className="input-glass w-full rounded-xl px-4 py-3 text-sm border-slate-300 dark:border-slate-700 focus:outline-hidden resize-none"
+            className="input-glass w-full rounded-xl px-4 py-3 text-sm border-slate-300 dark:border-slate-700 focus:outline-hidden resize-none bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
           />
           <HelpCircle className="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5 pointer-events-none" />
         </div>

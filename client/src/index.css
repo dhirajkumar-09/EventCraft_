@@ -76,6 +76,70 @@ html.dark .festive-gradient-text {
   border: 1px solid var(--border-color);
 }
 
+/* Glassmorphism Input & Select Controls with Guaranteed High-Contrast Visibility */
+.input-glass {
+  background-color: #ffffff;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.input-glass:focus {
+  border-color: #d97706;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+}
+
+.dark .input-glass,
+html.dark .input-glass {
+  background-color: #171822;
+  color: #f8fafc;
+  border-color: #2e3248;
+}
+
+.dark .input-glass:focus,
+html.dark .input-glass:focus {
+  border-color: #fbbf24;
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2);
+}
+
+/* Ensure native select dropdown menus in Chromium / Safari have crisp contrast */
+select {
+  color-scheme: light;
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+.dark select,
+html.dark select {
+  color-scheme: dark;
+  background-color: #171822 !important;
+  color: #f8fafc !important;
+}
+
+.dark select option,
+html.dark select option {
+  background-color: #1e2235 !important;
+  color: #f8fafc !important;
+}
+
+/* Form input contrast */
+input,
+textarea {
+  color-scheme: light;
+}
+
+.dark input,
+.dark textarea,
+html.dark input,
+html.dark textarea {
+  color-scheme: dark;
+}
+
 /* Shimmer animation for loading skeleton */
 @keyframes shimmer {
   0% { transform: translateX(-100%); }

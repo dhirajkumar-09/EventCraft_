@@ -25,7 +25,7 @@ export default function BudgetCurrencyInput({
       </label>
       <div className="flex rounded-xl overflow-hidden shadow-xs">
         <select
-          value={formData.currency}
+          value={formData.currency || 'INR'}
           onChange={(e) => {
             const selected = CURRENCIES.find((c) => c.code === e.target.value);
             if (selected) {
@@ -36,7 +36,7 @@ export default function BudgetCurrencyInput({
           className="px-2.5 py-3 text-xs font-bold bg-amber-100 dark:bg-slate-800 text-amber-900 dark:text-amber-300 border-r border-amber-200 dark:border-slate-700 focus:outline-hidden cursor-pointer"
         >
           {CURRENCIES.map((curr) => (
-            <option key={curr.code} value={curr.code}>
+            <option key={curr.code} value={curr.code} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
               {curr.code} ({curr.symbol})
             </option>
           ))}
@@ -50,10 +50,10 @@ export default function BudgetCurrencyInput({
             min="1000"
             step="5000"
             placeholder="e.g. 1500000"
-            value={formData.totalBudget}
+            value={formData.totalBudget ?? ''}
             onChange={onChange}
             onBlur={onBlur}
-            className={`input-glass w-full rounded-r-xl px-4 py-3 text-sm focus:outline-hidden ${
+            className={`input-glass w-full rounded-r-xl px-4 py-3 text-sm focus:outline-hidden bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 ${
               hasError
                 ? 'border-rose-500 dark:border-rose-500'
                 : 'border-slate-300 dark:border-slate-700'

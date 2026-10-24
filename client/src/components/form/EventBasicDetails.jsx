@@ -23,21 +23,21 @@ export default function EventBasicDetails({
         <select
           id="eventType"
           name="eventType"
-          value={formData.eventType}
+          value={formData.eventType || ''}
           onChange={onChange}
           onBlur={onBlur}
-          className={`input-glass w-full rounded-xl px-4 py-3 text-sm focus:outline-hidden ${
+          className={`input-glass w-full rounded-xl px-4 py-3 text-sm focus:outline-hidden bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 ${
             touched.eventType && errors.eventType
               ? 'border-rose-500 dark:border-rose-500'
               : 'border-slate-300 dark:border-slate-700'
           }`}
           aria-invalid={Boolean(touched.eventType && errors.eventType)}
         >
-          <option value="" disabled>
+          <option value="" className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400">
             Choose event type (e.g. Wedding, Birthday)...
           </option>
           {EVENT_TYPES.map((type) => (
-            <option key={type} value={type}>
+            <option key={type} value={type} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
               {type}
             </option>
           ))}
@@ -83,10 +83,10 @@ export default function EventBasicDetails({
             id="eventDate"
             name="eventDate"
             type="date"
-            value={formData.eventDate}
+            value={formData.eventDate || ''}
             onChange={onChange}
             onBlur={onBlur}
-            className={`input-glass w-full rounded-xl px-4 py-3 text-sm focus:outline-hidden ${
+            className={`input-glass w-full rounded-xl px-4 py-3 text-sm focus:outline-hidden bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 ${
               touched.eventDate && errors.eventDate
                 ? 'border-rose-500 dark:border-rose-500'
                 : 'border-slate-300 dark:border-slate-700'

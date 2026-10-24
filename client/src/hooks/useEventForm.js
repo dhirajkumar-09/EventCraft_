@@ -15,9 +15,10 @@ export { INITIAL_FORM_STATE, validateAllFields, validateFormField };
 /**
  * Manages form state, live validation, and submission for the Event Planner
  * @param {Object} [selectedPreset] - Preset to seed form
+ * @param {Function} [onClearPreset] - Callback to clear selected preset in parent
  * @returns {Object} Form state handlers and error maps
  */
-export function useEventForm(selectedPreset) {
+export function useEventForm(selectedPreset, onClearPreset) {
   const { generatePlan, isGenerating } = useEvent();
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState({});
@@ -85,7 +86,10 @@ export function useEventForm(selectedPreset) {
     setFormData(INITIAL_FORM_STATE);
     setErrors({});
     setTouched({});
-  }, []);
+    if (typeof onClearPreset === 'function') {
+      onClearPreset();
+    }
+  }, [onClearPreset]);
 
   const handleSubmit = useCallback((e) => {
     if (e?.preventDefault) e.preventDefault();
