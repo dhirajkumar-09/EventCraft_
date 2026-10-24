@@ -9,7 +9,10 @@
     "client": "npm --prefix client run dev",
     "postinstall": "cd client && npm install --include=dev",
     "build": "cd client && npm install --include=dev && npx vite build",
-    "test": "npm --prefix server test"
+    "test": "npm --prefix server test",
+    "lint": "npx oxlint client server",
+    "lint:client": "npm --prefix client run lint",
+    "lint:server": "npx oxlint server"
   },
   "dependencies": {
     "@google/genai": "^2.31.0",
