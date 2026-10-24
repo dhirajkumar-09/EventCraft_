@@ -55,19 +55,19 @@ app.use(express.json({ limit: '2mb' }));
 app.use('/api', generalLimiter);
 
 // Health & status endpoints
-app.get('/api/health', (req, res) => {
+app.get(['/api/health', '/health'], (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.get('/api/status', handleGetStatus);
+app.get(['/api/status', '/status'], handleGetStatus);
 
 // AI Planning routes with sanitization and dedicated AI rate limiter
-app.post('/api/plan/generate', aiLimiter, sanitizeEventInput, handleGeneratePlan);
-app.post('/api/plan/regenerate-section', aiLimiter, sanitizeEventInput, handleRegenerateSection);
-app.post('/api/plan/chat', aiLimiter, sanitizeEventInput, handleChatPlanner);
+app.post(['/api/plan/generate', '/plan/generate'], aiLimiter, sanitizeEventInput, handleGeneratePlan);
+app.post(['/api/plan/regenerate-section', '/plan/regenerate-section'], aiLimiter, sanitizeEventInput, handleRegenerateSection);
+app.post(['/api/plan/chat', '/plan/chat'], aiLimiter, sanitizeEventInput, handleChatPlanner);
 
 // 404 handler for API routes
-app.use('/api/*', (req, res) => {
+app.use(['/api/*', '/*'], (req, res) => {
   res.status(404).json({ error: 'Endpoint not found' });
 });
 
@@ -82,11 +82,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start listening
-const server = app.listen(PORT, () => {
-  console.log(`✨ EventCraft AI server running on http://localhost:${PORT}`);
-  console.log(`   Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`   Gemini Status: ${process.env.GEMINI_API_KEY ? 'Configured ✅' : 'Demo Mode (No API key in .env) 💡'}`);
-});
+// Start listening only in standalone server mode (not in Vercel serverless functions)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`✨ EventCraft AI server running on http://localhost:${PORT}`);
+    console.log(`   Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`   Gemini Status: ${process.env.GEMINI_API_KEY ? 'Configured ✅' : 'Demo Mode (No API key in .env) 💡'}`);
+  });
+}
 
 export default app;
