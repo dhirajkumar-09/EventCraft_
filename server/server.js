@@ -72,7 +72,7 @@ app.use(['/api/*', '/*'], (req, res) => {
 });
 
 // Centralized error handling
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error('[EventCraft Server Error]:', err);
   const status = err.status || 500;
   const message = err.message || 'Internal server error occurred while processing your event plan.';
@@ -82,8 +82,11 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start listening only in standalone server mode (not in Vercel serverless functions)
-if (!process.env.VERCEL) {
+// Determine if executed directly as main script or imported as a module
+const isDirectExecution = process.argv[1] && path.resolve(process.argv[1]) === __filename;
+
+// Start listening only in standalone server mode (not when imported in tests or Vercel serverless functions)
+if (!process.env.VERCEL && isDirectExecution) {
   app.listen(PORT, () => {
     console.log(`✨ EventCraft AI server running on http://localhost:${PORT}`);
     console.log(`   Environment: ${process.env.NODE_ENV || 'development'}`);

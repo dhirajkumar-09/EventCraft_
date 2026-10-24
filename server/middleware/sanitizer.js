@@ -23,6 +23,7 @@ const INJECTION_PATTERNS = [
 export function sanitizeString(val, maxLength = 1000) {
   if (typeof val !== 'string') return '';
   // Remove null bytes and non-printable characters except standard newlines/tabs
+  // eslint-disable-next-line no-control-regex
   let cleaned = val.replace(/\0/g, '').replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
   // Trim and limit length
   cleaned = cleaned.trim().slice(0, maxLength);

@@ -1,7 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { generateMockEventPlan } from '../services/mockPlanService.js';
-import { validateAndNormalizeBudget } from '../utils/budgetValidator.js';
 
 test('Data Accuracy - Verifies completeness and mathematical correctness across all 7 sections', () => {
   const input = {

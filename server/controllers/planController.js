@@ -1,10 +1,22 @@
+/**
+ * Plan Controller for EventCraft AI
+ * Handles API endpoints for plan generation, section regeneration, AI planner chat, and status check.
+ */
+
+import { GEMINI_CONFIG, VALID_SECTIONS } from '../config/constants.js';
 import {
-  generateEventPlan,
-  regenerateSection,
   chatWithPlanner,
-  isGeminiConfigured
+  generateEventPlan,
+  isGeminiConfigured,
+  regenerateSection
 } from '../services/geminiService.js';
 
+/**
+ * Handles master event plan generation request
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 export async function handleGeneratePlan(req, res, next) {
   try {
     const input = req.sanitizedBody;
@@ -26,24 +38,20 @@ export async function handleGeneratePlan(req, res, next) {
   }
 }
 
+/**
+ * Handles targeted section regeneration request
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 export async function handleRegenerateSection(req, res, next) {
   try {
     const input = req.sanitizedBody;
     const { section, currentPlan } = input;
 
-    const validSections = [
-      'overview',
-      'budget',
-      'timeline',
-      'vendorChecklist',
-      'personalizedIdeas',
-      'runSheet',
-      'backupPlan'
-    ];
-
-    if (!validSections.includes(section)) {
+    if (!VALID_SECTIONS.includes(section)) {
       return res.status(400).json({
-        error: `Invalid section '${section}'. Must be one of: ${validSections.join(', ')}`
+        error: `Invalid section '${section}'. Must be one of: ${VALID_SECTIONS.join(', ')}`
       });
     }
 
@@ -59,6 +67,12 @@ export async function handleRegenerateSection(req, res, next) {
   }
 }
 
+/**
+ * Handles conversational follow-up questions and plan updates
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 export async function handleChatPlanner(req, res, next) {
   try {
     const input = req.sanitizedBody;
@@ -81,12 +95,17 @@ export async function handleChatPlanner(req, res, next) {
   }
 }
 
-export function handleGetStatus(req, res) {
+/**
+ * Returns the health, engine status, and AI model info
+ * @param {import('express').Request} _req
+ * @param {import('express').Response} res
+ */
+export function handleGetStatus(_req, res) {
   const apiKeyConfigured = isGeminiConfigured();
   res.json({
     status: 'online',
     appName: 'EventCraft AI',
-    model: 'gemini-2.5-flash',
+    model: GEMINI_CONFIG.CANDIDATE_MODELS[0],
     apiKeyConfigured,
     mode: apiKeyConfigured ? 'live-gemini' : 'smart-planner-engine'
   });
