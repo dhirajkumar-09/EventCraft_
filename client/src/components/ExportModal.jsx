@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { useEvent } from '../context/EventContext.jsx';
 import { generateWhatsAppSummary, openWhatsAppShare } from '../utils/whatsappFormat.js';
-import { openPrintableDocument, triggerPrintPlan } from '../utils/exportPdf.js';
+import { exportStructuredPdf, triggerPrintPlan } from '../utils/exportPdf.js';
 
 export default function ExportModal({ isOpen, onClose }) {
   const { plan, meta } = useEvent();
@@ -152,16 +152,27 @@ export default function ExportModal({ isOpen, onClose }) {
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
                 Generates a clean, formatted document with executive overview, budget breakdown table, timeline countdown, vendor contacts, run sheet, and contingency mitigations.
               </p>
-              <div className="pt-2">
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button
                   onClick={() => {
-                    openPrintableDocument(plan, meta, 'full');
+                    exportStructuredPdf(plan, meta);
                     onClose();
                   }}
-                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-black text-xs text-white bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-700 hover:to-rose-700 shadow-lg shadow-amber-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-black text-xs text-white bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-700 hover:to-rose-700 shadow-lg shadow-amber-600/20 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                >
+                  <FileDown className="w-4 h-4" />
+                  <span>Download Structured PDF File</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    triggerPrintPlan();
+                    onClose();
+                  }}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-xs text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-all cursor-pointer"
                 >
                   <Printer className="w-4 h-4" />
-                  <span>Open Print / Save PDF View</span>
+                  <span>Print Document</span>
                 </button>
               </div>
             </div>

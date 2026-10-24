@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Sparkles, RotateCw, Copy, Check, Heart, Compass, BookmarkCheck } from 'lucide-react';
+import { Sparkles, RotateCw, Copy, Check, Heart, Compass, BookmarkCheck, FileDown } from 'lucide-react';
 import { useEvent } from '../../context/EventContext.jsx';
+import Card3D from '../Card3D.jsx';
+import { exportStructuredPdf } from '../../utils/exportPdf.js';
 
 export default function OverviewTab() {
   const { plan, meta, regenerateSingleSection, regeneratingSection } = useEvent();
@@ -30,37 +32,50 @@ export default function OverviewTab() {
           </h3>
         </div>
 
-        <button
-          onClick={() => regenerateSingleSection('overview')}
-          disabled={isRegenerating}
-          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-slate-700 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-slate-700 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 cursor-pointer shadow-xs self-start sm:self-auto"
-        >
-          <RotateCw className={`w-3.5 h-3.5 ${isRegenerating ? 'animate-spin text-amber-600' : ''}`} />
-          <span>{isRegenerating ? 'Regenerating Overview...' : 'Regenerate Overview'}</span>
-        </button>
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => exportStructuredPdf(plan, meta)}
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-700 hover:to-rose-700 text-white shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+            title="Download full structured celebration plan as PDF"
+          >
+            <FileDown className="w-3.5 h-3.5" />
+            <span>Download Structured PDF</span>
+          </button>
+
+          <button
+            onClick={() => regenerateSingleSection('overview')}
+            disabled={isRegenerating}
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-slate-700 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-slate-700 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 cursor-pointer shadow-xs"
+          >
+            <RotateCw className={`w-3.5 h-3.5 ${isRegenerating ? 'animate-spin text-amber-600' : ''}`} />
+            <span>{isRegenerating ? 'Regenerating Overview...' : 'Regenerate Overview'}</span>
+          </button>
+        </div>
       </div>
 
-      {/* Suggested Theme Showcase Card */}
-      <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-amber-500/10 via-rose-500/10 to-purple-600/10 dark:from-amber-950/40 dark:via-rose-950/30 dark:to-purple-950/40 border border-amber-200 dark:border-slate-700 shadow-md">
-        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300 mb-2">
-          <Sparkles className="w-4 h-4" />
-          <span>Curated Theme & Concept</span>
-        </div>
+      {/* Suggested Theme Showcase Card with 3D Depth */}
+      <Card3D depth={20} maxTilt={6}>
+        <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-amber-500/10 via-rose-500/10 to-purple-600/10 dark:from-amber-950/40 dark:via-rose-950/30 dark:to-purple-950/40 border border-amber-200 dark:border-slate-700 shadow-md">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300 mb-2">
+            <Sparkles className="w-4 h-4" />
+            <span>Curated Theme & Concept</span>
+          </div>
 
-        <h4 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-3">
-          {overview.suggestedTheme}
-        </h4>
+          <h4 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-3">
+            {overview.suggestedTheme}
+          </h4>
 
-        <div className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-amber-200/60 dark:border-slate-800 backdrop-blur-sm">
-          <p className="text-sm sm:text-base font-semibold italic text-amber-900 dark:text-amber-200">
-            "{overview.oneLineVibe}"
+          <div className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-amber-200/60 dark:border-slate-800 backdrop-blur-sm">
+            <p className="text-sm sm:text-base font-semibold italic text-amber-900 dark:text-amber-200">
+              "{overview.oneLineVibe}"
+            </p>
+          </div>
+
+          <p className="mt-4 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+            {overview.summary}
           </p>
         </div>
-
-        <p className="mt-4 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-          {overview.summary}
-        </p>
-      </div>
+      </Card3D>
 
       {/* Color Palette Swatches */}
       {overview.colorPalette && overview.colorPalette.length > 0 && (

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Sparkles, Sun, Moon, Key, Share2, Printer, CheckCircle2, Bot } from 'lucide-react';
+import { Sparkles, Sun, Moon, Key, Share2, Printer, CheckCircle2, Bot, FileDown } from 'lucide-react';
 import { useEvent } from '../context/EventContext.jsx';
+import { exportStructuredPdf } from '../utils/exportPdf.js';
 
 export default function Navbar({ onOpenExport, onOpenApiKey }) {
   const { themeMode, toggleTheme, plan, serverStatus, customApiKey } = useEvent();
@@ -43,6 +44,18 @@ export default function Navbar({ onOpenExport, onOpenApiKey }) {
             <span className="hidden sm:inline">{isGeminiLive ? 'Gemini Active' : 'API Key Setup'}</span>
             <Key className="w-3.5 h-3.5 opacity-60 ml-0.5" />
           </button>
+
+          {/* Direct PDF Download button */}
+          {plan && (
+            <button
+              onClick={() => exportStructuredPdf(plan, meta)}
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-600/40 shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              title="Download Structured Event Plan PDF"
+            >
+              <FileDown className="w-3.5 h-3.5 text-amber-600" />
+              <span>Download PDF</span>
+            </button>
+          )}
 
           {/* Export & Print actions (shown if plan exists) */}
           {plan && (

@@ -1,30 +1,34 @@
 import React from 'react';
 import { Sparkles, Calendar, DollarSign, ShieldCheck, HeartHandshake, Zap } from 'lucide-react';
 import { SAMPLE_PRESETS } from '../utils/sampleData.js';
+import Hero3DStage from './Hero3DStage.jsx';
 
 export default function Hero({ onSelectPreset, onScrollToForm }) {
   return (
-    <div className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14">
+    <div className="relative overflow-hidden pt-6 pb-10 sm:pt-10 sm:pb-14">
       {/* Decorative ambient background glows */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-amber-200/30 via-rose-100/20 to-transparent dark:from-amber-600/10 dark:via-purple-900/10 dark:to-transparent pointer-events-none blur-3xl -z-10" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
         {/* Festive Badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300/80 dark:border-amber-700/60 shadow-xs mb-5 animate-fade-in">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300/80 dark:border-amber-700/60 shadow-xs mb-4 animate-fade-in">
           <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-          <span>GenAI Powered Celebration Architect • Gemini 2.5 Flash</span>
+          <span>GenAI Celebration Architect • Interactive 3D • Gemini 2.5 Flash</span>
         </div>
 
         {/* Hero Title */}
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white leading-[1.15] mb-4">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white leading-[1.15] mb-3">
           Organize Unforgettable Celebrations with{' '}
           <span className="festive-gradient-text">AI Precision</span>
         </h1>
 
-        <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-600 dark:text-slate-300 font-normal leading-relaxed mb-8">
+        <p className="max-w-2xl mx-auto text-sm sm:text-base text-slate-600 dark:text-slate-300 font-normal leading-relaxed mb-4">
           From opulent Indian weddings and milestone birthdays to vibrant community galas. 
-          Generate realistic, city-specific budgets, adaptive countdown timelines, vendor negotiation playbooks, and 3 unique "wow moments".
+          Generate realistic, city-specific budgets, countdown timelines, and 3 unique "wow moments".
         </p>
+
+        {/* Interactive 3D Celebration Stage */}
+        <Hero3DStage />
 
         {/* Value Prop Badges */}
         <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 mb-8">
