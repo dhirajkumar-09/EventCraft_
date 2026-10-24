@@ -3,15 +3,12 @@
   "version": "1.0.0",
   "description": "EventCraft AI - GenAI Celebration & Event Planner",
   "type": "module",
-  "workspaces": [
-    "client",
-    "server"
-  ],
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "npm --prefix server run dev",
     "client": "npm --prefix client run dev",
-    "build": "npm --prefix client install && npm --prefix client run build",
+    "postinstall": "cd client && npm install",
+    "build": "cd client && npm install && npm run build",
     "test": "npm --prefix server test"
   },
   "dependencies": {
@@ -22,6 +19,10 @@
     "express-rate-limit": "^7.5.0"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "@tailwindcss/vite": "^4.3.3",
+    "@vitejs/plugin-react": "^6.1.2",
+    "concurrently": "^9.1.2",
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.3.4"
   }
 }
