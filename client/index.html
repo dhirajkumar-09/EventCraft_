@@ -18,7 +18,9 @@
             document.documentElement.classList.remove('dark');
             document.documentElement.style.colorScheme = 'light';
           }
-        } catch(e) {}
+        } catch (_err) {
+          /* Fallback gracefully if localStorage or matchMedia is restricted */
+        }
       })();
     </script>
   </head>

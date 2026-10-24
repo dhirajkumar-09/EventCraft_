@@ -103,17 +103,9 @@ export default function ExportModal({ isOpen, onClose }) {
         {/* Body Content */}
         <div className="p-6">
           {activeExportMode === 'whatsapp' ? (
-            <WhatsAppExportPane
-              whatsappText={whatsappText}
-              onCopy={handleCopy}
-              copied={copied}
-            />
+            <WhatsAppExportPane whatsappText={whatsappText} onCopy={handleCopy} copied={copied} />
           ) : (
-            <PdfExportPane
-              plan={plan}
-              meta={meta}
-              activeExportMode={activeExportMode}
-            />
+            <PdfExportPane plan={plan} meta={meta} activeExportMode={activeExportMode} />
           )}
         </div>
       </div>

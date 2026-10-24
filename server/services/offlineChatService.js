@@ -19,7 +19,13 @@ export function handleOfflineChat(userMessage, currentPlan, input) {
 
   let reply = `I've reviewed your request: "${userMessage}". As your dedicated event planner, I've incorporated these adjustments into your event plan!`;
 
-  if (msgLower.includes('budget') && (msgLower.includes('reduce') || msgLower.includes('cut') || msgLower.includes('lower') || msgLower.includes('20%'))) {
+  if (
+    msgLower.includes('budget') &&
+    (msgLower.includes('reduce') ||
+      msgLower.includes('cut') ||
+      msgLower.includes('lower') ||
+      msgLower.includes('20%'))
+  ) {
     const newTotal = Math.round((updated.budget?.totalBudget || 1000000) * 0.8);
     const normalized = validateAndNormalizeBudget(
       updated.budget?.categories || [],
@@ -34,14 +40,21 @@ export function handleOfflineChat(userMessage, currentPlan, input) {
     };
     reply = `I've optimized your budget by reducing total expenditure by 20% down to ${updated.budget.currencySymbol}${newTotal.toLocaleString()}. We re-negotiated catering per-plate rates, streamlined decor with seasonal local blooms, and maintained your full 10% emergency contingency cushion!`;
   } else if (msgLower.includes('kid') || msgLower.includes('children')) {
-    if (updated.personalizedIdeas?.gamesOrActivities && !updated.personalizedIdeas.gamesOrActivities.some((g) => g.includes('Kids'))) {
+    if (
+      updated.personalizedIdeas?.gamesOrActivities &&
+      !updated.personalizedIdeas.gamesOrActivities.some((g) => g.includes('Kids'))
+    ) {
       updated.personalizedIdeas.gamesOrActivities.unshift(
         `"Kids Fun Zone": Dedicated supervised entertainment corner with balloon sculpting, face painting, and mini craft tables.`
       );
       if (Array.isArray(updated.personalizedIdeas.menu)) {
         updated.personalizedIdeas.menu.unshift({
           course: 'Kids Special Treats Counter',
-          items: ['Mini Sliders & Smiles Fries', 'Cheesy Macaroni Pots', 'Rainbow Mocktails & Cupcakes']
+          items: [
+            'Mini Sliders & Smiles Fries',
+            'Cheesy Macaroni Pots',
+            'Rainbow Mocktails & Cupcakes'
+          ]
         });
       }
     }

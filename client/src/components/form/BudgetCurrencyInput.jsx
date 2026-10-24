@@ -36,7 +36,11 @@ export default function BudgetCurrencyInput({
           className="px-2.5 py-3 text-xs font-bold bg-amber-100 dark:bg-slate-800 text-amber-900 dark:text-amber-300 border-r border-amber-200 dark:border-slate-700 focus:outline-hidden cursor-pointer"
         >
           {CURRENCIES.map((curr) => (
-            <option key={curr.code} value={curr.code} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+            <option
+              key={curr.code}
+              value={curr.code}
+              className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+            >
               {curr.code} ({curr.symbol})
             </option>
           ))}

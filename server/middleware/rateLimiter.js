@@ -22,6 +22,7 @@ export const aiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: {
-    error: 'AI generation rate limit reached. Please wait a couple minutes before generating another plan.'
+    error:
+      'AI generation rate limit reached. Please wait a couple minutes before generating another plan.'
   }
 });

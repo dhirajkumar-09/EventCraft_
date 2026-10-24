@@ -1,13 +1,7 @@
 import React from 'react';
 import { formatCurrency } from '../../utils/currencyFormatter.js';
 
-export default function DonutLegend({
-  segments,
-  hoveredIndex,
-  onHover,
-  onLeave,
-  currencySymbol
-}) {
+export default function DonutLegend({ segments, hoveredIndex, onHover, onLeave, currencySymbol }) {
   return (
     <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
       {segments.map((cat, idx) => {

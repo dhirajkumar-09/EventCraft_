@@ -71,11 +71,18 @@ export default function EventLocationBudget({
           }`}
           aria-invalid={Boolean(touched.venueType && errors.venueType)}
         >
-          <option value="" className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400">
+          <option
+            value=""
+            className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400"
+          >
             Choose venue setting...
           </option>
           {VENUE_TYPES.map((venue) => (
-            <option key={venue.value} value={venue.value} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+            <option
+              key={venue.value}
+              value={venue.value}
+              className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+            >
               {venue.label}
             </option>
           ))}

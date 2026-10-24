@@ -16,8 +16,8 @@ export default class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    // Log error to monitoring or console in development
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production' && typeof console !== 'undefined') {
+      // eslint-disable-next-line no-console
       console.error('ErrorBoundary caught an unhandled error:', error, errorInfo);
     }
   }
@@ -44,7 +44,8 @@ export default class ErrorBoundary extends Component {
                 Something went unexpectedly wrong
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                We encountered an issue rendering this celebration view. Your saved data remains safe.
+                We encountered an issue rendering this celebration view. Your saved data remains
+                safe.
               </p>
             </div>
 

@@ -42,9 +42,10 @@ test('Budget Math - Automatically injects 10% contingency if missing', () => {
   ];
 
   const result = validateAndNormalizeBudget(rawWithoutContingency, targetTotal, 'INR', '₹');
-  const hasContingency = result.categories.some(c => 
-    c.category.toLowerCase().includes('contingency') ||
-    c.category.toLowerCase().includes('emergency')
+  const hasContingency = result.categories.some(
+    (c) =>
+      c.category.toLowerCase().includes('contingency') ||
+      c.category.toLowerCase().includes('emergency')
   );
 
   assert.equal(hasContingency, true, 'Result must include a 10% contingency category');
@@ -63,7 +64,7 @@ test('Budget Math - Handles small odd amounts without decimal rounding drift', (
 
 test('Budget Math - Standard categories are 9 items including 10% contingency', () => {
   assert.equal(STANDARD_CATEGORIES.length, 9);
-  const contingency = STANDARD_CATEGORIES.find(c => c.key === 'contingency');
+  const contingency = STANDARD_CATEGORIES.find((c) => c.key === 'contingency');
   assert.ok(contingency);
   assert.equal(contingency.defaultPct, 10);
 });

@@ -33,11 +33,18 @@ export default function EventBasicDetails({
           }`}
           aria-invalid={Boolean(touched.eventType && errors.eventType)}
         >
-          <option value="" className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400">
+          <option
+            value=""
+            className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400"
+          >
             Choose event type (e.g. Wedding, Birthday)...
           </option>
           {EVENT_TYPES.map((type) => (
-            <option key={type} value={type} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+            <option
+              key={type}
+              value={type}
+              className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+            >
               {type}
             </option>
           ))}
@@ -65,16 +72,16 @@ export default function EventBasicDetails({
                 daysRemaining > 0
                   ? 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300'
                   : daysRemaining === 0
-                  ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300'
-                  : 'bg-rose-100 text-rose-900 dark:bg-rose-950 dark:text-rose-300'
+                    ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300'
+                    : 'bg-rose-100 text-rose-900 dark:bg-rose-950 dark:text-rose-300'
               }`}
             >
               <Clock className="w-3 h-3" />
               {daysRemaining > 0
                 ? `${daysRemaining} days remaining`
                 : daysRemaining === 0
-                ? 'Today is the day!'
-                : 'Date is in the past'}
+                  ? 'Today is the day!'
+                  : 'Date is in the past'}
             </span>
           )}
         </div>

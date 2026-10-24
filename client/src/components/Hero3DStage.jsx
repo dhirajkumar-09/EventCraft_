@@ -11,13 +11,38 @@ import {
 } from 'lucide-react';
 
 const REAL_MODULES = [
-  { id: 'overview', icon: Sparkles, label: 'Theme & Vibe', desc: 'Curated themes & color palettes' },
-  { id: 'budget', icon: PieChart, label: 'Strict Budget Math', desc: '100% balanced with 10% cushion' },
-  { id: 'timeline', icon: Calendar, label: 'Adaptive Timeline', desc: 'Custom countdown to event day' },
-  { id: 'vendors', icon: CheckSquare, label: 'Vendor Playbook', desc: 'Negotiation scripts & cost bands' },
+  {
+    id: 'overview',
+    icon: Sparkles,
+    label: 'Theme & Vibe',
+    desc: 'Curated themes & color palettes'
+  },
+  {
+    id: 'budget',
+    icon: PieChart,
+    label: 'Strict Budget Math',
+    desc: '100% balanced with 10% cushion'
+  },
+  {
+    id: 'timeline',
+    icon: Calendar,
+    label: 'Adaptive Timeline',
+    desc: 'Custom countdown to event day'
+  },
+  {
+    id: 'vendors',
+    icon: CheckSquare,
+    label: 'Vendor Playbook',
+    desc: 'Negotiation scripts & cost bands'
+  },
   { id: 'wow', icon: Lightbulb, label: '3 Wow Moments', desc: 'Unforgettable surprise elements' },
   { id: 'runsheet', icon: Clock, label: 'Master Run Sheet', desc: 'Hour-by-hour operational cues' },
-  { id: 'backup', icon: ShieldAlert, label: 'Risk Contingencies', desc: 'Top 3 risks & mitigation plans' }
+  {
+    id: 'backup',
+    icon: ShieldAlert,
+    label: 'Risk Contingencies',
+    desc: 'Top 3 risks & mitigation plans'
+  }
 ];
 
 export default function Hero3DStage() {

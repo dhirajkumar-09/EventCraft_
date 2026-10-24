@@ -23,8 +23,9 @@ export default function Hero({ onSelectPreset }) {
         </h1>
 
         <p className="max-w-2xl mx-auto text-sm sm:text-base text-slate-600 dark:text-slate-300 font-normal leading-relaxed mb-4">
-          From opulent Indian weddings and milestone birthdays to vibrant community galas. 
-          Generate realistic, city-specific budgets, countdown timelines, vendor playbooks, and 3 unique "wow moments".
+          From opulent Indian weddings and milestone birthdays to vibrant community galas. Generate
+          realistic, city-specific budgets, countdown timelines, vendor playbooks, and 3 unique "wow
+          moments".
         </p>
 
         {/* Interactive 3D Celebration Stage */}
@@ -54,13 +55,13 @@ export default function Hero({ onSelectPreset }) {
                   {preset.name.split('(')[0]}
                 </span>
                 <span className="text-[10px] text-slate-500 dark:text-slate-400 truncate w-full mt-0.5">
-                  {preset.data.city} • {preset.data.currencySymbol}{Number(preset.data.totalBudget).toLocaleString()}
+                  {preset.data.city} • {preset.data.currencySymbol}
+                  {Number(preset.data.totalBudget).toLocaleString()}
                 </span>
               </button>
             ))}
           </div>
         </div>
-
       </div>
     </div>
   );

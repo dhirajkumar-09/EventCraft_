@@ -3,15 +3,12 @@ import { CheckCircle2 } from 'lucide-react';
 
 const PRIORITY_BADGES = {
   High: 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300 border-rose-300 dark:border-rose-800',
-  Medium: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 border-amber-300 dark:border-amber-800',
+  Medium:
+    'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 border-amber-300 dark:border-amber-800',
   Low: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-300 dark:border-slate-700'
 };
 
-export default function TimelinePhaseCard({
-  phase,
-  checkedItems,
-  onToggleCheckItem
-}) {
+export default function TimelinePhaseCard({ phase, checkedItems, onToggleCheckItem }) {
   const totalTasks = phase.tasks?.length || 0;
   const completedTasks = (phase.tasks || []).filter((task) => checkedItems[task.id]).length;
   const isPhaseDone = totalTasks > 0 && totalTasks === completedTasks;
@@ -24,8 +21,8 @@ export default function TimelinePhaseCard({
           isPhaseDone
             ? 'bg-emerald-500 border-emerald-500 text-white shadow-xs'
             : completedTasks > 0
-            ? 'bg-amber-500 border-amber-500 text-white shadow-xs'
-            : 'bg-white dark:bg-slate-900 border-amber-400 dark:border-slate-600'
+              ? 'bg-amber-500 border-amber-500 text-white shadow-xs'
+              : 'bg-white dark:bg-slate-900 border-amber-400 dark:border-slate-600'
         }`}
       >
         {isPhaseDone ? (

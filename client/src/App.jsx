@@ -17,14 +17,7 @@ import { MessageSquareText, AlertOctagon, Sparkles } from 'lucide-react';
  * EventCraft AI - Celebration Planner Root Component
  */
 export default function App() {
-  const {
-    plan,
-    activeTab,
-    isLoading,
-    error,
-    setError,
-    setIsChatOpen
-  } = useEvent();
+  const { plan, activeTab, isLoading, error, setError, setIsChatOpen } = useEvent();
 
   const [selectedPreset, setSelectedPreset] = useState(null);
   const [isExportOpen, setIsExportOpen] = useState(false);
@@ -57,17 +50,11 @@ export default function App() {
 
         <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
           {/* Hero Section */}
-          <Hero
-            onSelectPreset={handleSelectPreset}
-            onScrollToForm={handleScrollToForm}
-          />
+          <Hero onSelectPreset={handleSelectPreset} onScrollToForm={handleScrollToForm} />
 
           {/* User Input Form */}
           <div ref={formRef}>
-            <EventForm
-              presetData={selectedPreset}
-              onClearPreset={() => setSelectedPreset(null)}
-            />
+            <EventForm presetData={selectedPreset} onClearPreset={() => setSelectedPreset(null)} />
           </div>
 
           {/* Error Notification & Dismiss State */}
@@ -124,14 +111,8 @@ export default function App() {
 
         {/* Modals & Drawers */}
         <ChatPlannerModal />
-        <ExportModal
-          isOpen={isExportOpen}
-          onClose={() => setIsExportOpen(false)}
-        />
-        <ApiKeyModal
-          isOpen={isApiKeyOpen}
-          onClose={() => setIsApiKeyOpen(false)}
-        />
+        <ExportModal isOpen={isExportOpen} onClose={() => setIsExportOpen(false)} />
+        <ApiKeyModal isOpen={isApiKeyOpen} onClose={() => setIsApiKeyOpen(false)} />
 
         {/* Celebratory Footer */}
         <footer className="w-full border-t border-amber-200/60 dark:border-slate-800 py-8 mt-16 bg-white/50 dark:bg-slate-900/50 backdrop-blur-xs text-center text-xs text-slate-500 dark:text-slate-400 no-print">

@@ -22,7 +22,9 @@ export function EventProvider({ children }) {
   const [meta, setMeta] = usePersistentState(STORAGE_KEYS.META, null);
   const [checkedItems, setCheckedItems] = usePersistentState(STORAGE_KEYS.CHECKED, {});
   const [chatHistory, setChatHistory] = usePersistentState(STORAGE_KEYS.CHAT, []);
-  const [customApiKey, setCustomApiKey] = useState(() => localStorage.getItem(STORAGE_KEYS.API_KEY) || '');
+  const [customApiKey, setCustomApiKey] = useState(
+    () => localStorage.getItem(STORAGE_KEYS.API_KEY) || ''
+  );
 
   // UI state
   const [activeTab, setActiveTab] = useState('overview');
@@ -72,16 +74,21 @@ export function EventProvider({ children }) {
   useEffect(() => {
     fetchServerStatusApi()
       .then(setServerStatus)
-      .catch((err) => console.warn('Backend status check failed:', err.message));
+      .catch(() => {
+        // Server status check is optional in offline or demo client environments
+      });
   }, []);
 
   const { totalItemsCount, checkedItemsCount, progressPercentage } = useMemo(() => {
     return calculatePlanProgress(plan, checkedItems);
   }, [plan, checkedItems]);
 
-  const toggleCheckItem = useCallback((id) => {
-    setCheckedItems((prev) => ({ ...prev, [id]: !prev[id] }));
-  }, [setCheckedItems]);
+  const toggleCheckItem = useCallback(
+    (id) => {
+      setCheckedItems((prev) => ({ ...prev, [id]: !prev[id] }));
+    },
+    [setCheckedItems]
+  );
 
   const resetProgress = useCallback(() => {
     setCheckedItems({});

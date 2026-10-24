@@ -7,42 +7,52 @@ export function getMockVendors(numericBudget, currencySymbol, daysRemaining, cui
     {
       id: 'v-1',
       vendorType: 'Venue Manager',
-      whatToAskOrNegotiate: 'Clarify curfew timing, loud-music permissions, sound decibel limits, and outside vendor corkage fees.',
-      estimatedCostRange: `${currencySymbol}${Math.round(numericBudget * 0.20).toLocaleString()} - ${currencySymbol}${Math.round(numericBudget * 0.26).toLocaleString()}`,
+      whatToAskOrNegotiate:
+        'Clarify curfew timing, loud-music permissions, sound decibel limits, and outside vendor corkage fees.',
+      estimatedCostRange: `${currencySymbol}${Math.round(numericBudget * 0.2).toLocaleString()} - ${currencySymbol}${Math.round(numericBudget * 0.26).toLocaleString()}`,
       bookingDeadline: daysRemaining > 45 ? 'T-45 Days' : 'Immediate (Within 48h)'
     },
     {
       id: 'v-2',
       vendorType: 'Caterer & Beverage Service',
       whatToAskOrNegotiate: `Request mandatory menu tasting for ${cuisineDiet} cuisine, staff-to-guest ratio (minimum 1:12), and mineral water provisions.`,
-      estimatedCostRange: `${currencySymbol}${Math.round(numericBudget * 0.24).toLocaleString()} - ${currencySymbol}${Math.round(numericBudget * 0.30).toLocaleString()}`,
+      estimatedCostRange: `${currencySymbol}${Math.round(numericBudget * 0.24).toLocaleString()} - ${currencySymbol}${Math.round(numericBudget * 0.3).toLocaleString()}`,
       bookingDeadline: daysRemaining > 30 ? 'T-30 Days' : 'This Week'
     },
     {
       id: 'v-3',
       vendorType: 'Floral & Thematic Decorator',
-      whatToAskOrNegotiate: 'Negotiate mock-up stage presentation, floral freshness guarantee, and generator backup for fairy lights.',
+      whatToAskOrNegotiate:
+        'Negotiate mock-up stage presentation, floral freshness guarantee, and generator backup for fairy lights.',
       estimatedCostRange: `${currencySymbol}${Math.round(numericBudget * 0.11).toLocaleString()} - ${currencySymbol}${Math.round(numericBudget * 0.16).toLocaleString()}`,
       bookingDeadline: daysRemaining > 30 ? 'T-25 Days' : 'Immediate'
     },
     {
       id: 'v-4',
       vendorType: 'Photographer & Cinematographer',
-      whatToAskOrNegotiate: 'Confirm exact camera models, drone flying permissions, deliverable timeline for raw cuts, and teaser reel commitment.',
+      whatToAskOrNegotiate:
+        'Confirm exact camera models, drone flying permissions, deliverable timeline for raw cuts, and teaser reel commitment.',
       estimatedCostRange: `${currencySymbol}${Math.round(numericBudget * 0.08).toLocaleString()} - ${currencySymbol}${Math.round(numericBudget * 0.12).toLocaleString()}`,
       bookingDeadline: daysRemaining > 40 ? 'T-35 Days' : 'Urgent'
     },
     {
       id: 'v-5',
       vendorType: 'Live DJ & Sound Engineer',
-      whatToAskOrNegotiate: 'Check library of regional hits, dual wireless mics, sound console redundancy, and overtime hourly rates.',
+      whatToAskOrNegotiate:
+        'Check library of regional hits, dual wireless mics, sound console redundancy, and overtime hourly rates.',
       estimatedCostRange: `${currencySymbol}${Math.round(numericBudget * 0.04).toLocaleString()} - ${currencySymbol}${Math.round(numericBudget * 0.07).toLocaleString()}`,
       bookingDeadline: daysRemaining > 20 ? 'T-15 Days' : 'This Week'
     }
   ];
 }
 
-export function getMockPersonalizedIdeas(eventType, cuisineDiet, isJaipur, isMumbai, specialRequests) {
+export function getMockPersonalizedIdeas(
+  eventType,
+  cuisineDiet,
+  isJaipur,
+  isMumbai,
+  specialRequests
+) {
   const decor = [
     `Grand entrance archway adorned with marigold cascades and brass lanterns (${isJaipur ? 'Rajasthani Jharokha motif' : 'Contemporary floral trellis'}).`,
     `Statement photo-opportunity backdrop with glowing neon celebration signage and fairylight curtaining.`,
@@ -50,7 +60,9 @@ export function getMockPersonalizedIdeas(eventType, cuisineDiet, isJaipur, isMum
   ];
 
   if (specialRequests && specialRequests.trim()) {
-    decor.push(`Bespoke celebration feature tailored to your request: "${specialRequests.trim()}".`);
+    decor.push(
+      `Bespoke celebration feature tailored to your request: "${specialRequests.trim()}".`
+    );
   }
 
   return {
@@ -59,7 +71,9 @@ export function getMockPersonalizedIdeas(eventType, cuisineDiet, isJaipur, isMum
       {
         course: 'Welcome Beverages & Street Eats',
         items: [
-          isMumbai ? 'Spiced Kokum Fizz & Mumbai Cutting Chai' : 'Kesariya Thandai & Marigold Mojito',
+          isMumbai
+            ? 'Spiced Kokum Fizz & Mumbai Cutting Chai'
+            : 'Kesariya Thandai & Marigold Mojito',
           'Truffle Infused Paneer Tikka Pops',
           'Mini Palak Patta Chaat with Pomegranate Pearls'
         ]
@@ -67,7 +81,9 @@ export function getMockPersonalizedIdeas(eventType, cuisineDiet, isJaipur, isMum
       {
         course: 'Signature Live Counters',
         items: [
-          cuisineDiet === 'veg' || cuisineDiet === 'jain' ? 'Wood-Fired Dal Baati Counter & Ker Sangri' : 'Live Charcoal Tandoor & Galouti Kebabs',
+          cuisineDiet === 'veg' || cuisineDiet === 'jain'
+            ? 'Wood-Fired Dal Baati Counter & Ker Sangri'
+            : 'Live Charcoal Tandoor & Galouti Kebabs',
           'Artisanal Pasta in Parmesan Wheel',
           'Crispy Lotus Stem in Sweet Chili Glaze'
         ]
@@ -107,17 +123,22 @@ export function getMockPersonalizedIdeas(eventType, cuisineDiet, isJaipur, isMum
     wowMoments: [
       {
         title: 'Cold-Pyro & Holographic Entry Portal',
-        description: 'Synchronized sparkular cold-pyrotechnic fountain archways and dry-ice fog creating a magical entrance without smoke or heat.',
-        executionTip: 'Rehearse audio cue with DJ at least 2 hours before guest arrivals for exact timing with entry music.'
+        description:
+          'Synchronized sparkular cold-pyrotechnic fountain archways and dry-ice fog creating a magical entrance without smoke or heat.',
+        executionTip:
+          'Rehearse audio cue with DJ at least 2 hours before guest arrivals for exact timing with entry music.'
       },
       {
         title: 'Live Scent-Bar & Memory Memento',
-        description: 'An interactive perfumery counter where guests formulate their personalized roll-on celebration attar/scent to take home.',
-        executionTip: 'Position near the exit lounge so guests enjoy the experience during departures.'
+        description:
+          'An interactive perfumery counter where guests formulate their personalized roll-on celebration attar/scent to take home.',
+        executionTip:
+          'Position near the exit lounge so guests enjoy the experience during departures.'
       },
       {
         title: 'Midnight Fireworks & Sky Lantern Spectacle',
-        description: 'An eco-friendly low-noise aerial light celebration or unified candlelight moment set to emotional acoustic score.',
+        description:
+          'An eco-friendly low-noise aerial light celebration or unified candlelight moment set to emotional acoustic score.',
         executionTip: 'Pre-clear open-air clearance with local venue security.'
       }
     ]
@@ -131,14 +152,16 @@ export function getMockRunSheet() {
       time: '03:00 PM - 04:30 PM',
       activity: 'Vendor Production & Decor Load-In Inspection',
       owner: 'Production Lead & Decorator',
-      notes: 'Test power generator backup, verify sound consoles, check floral freshness and table linens.'
+      notes:
+        'Test power generator backup, verify sound consoles, check floral freshness and table linens.'
     },
     {
       id: 'rs-2',
       time: '05:00 PM - 06:00 PM',
       activity: 'Sound Check & Family Portrait Photography',
       owner: 'Cinematographer & Lead Coordinator',
-      notes: 'Capture staged family portraits and couple aesthetics prior to guest arrival while makeup is pristine.'
+      notes:
+        'Capture staged family portraits and couple aesthetics prior to guest arrival while makeup is pristine.'
     },
     {
       id: 'rs-3',
@@ -159,7 +182,8 @@ export function getMockRunSheet() {
       time: '08:30 PM - 10:30 PM',
       activity: 'Gourmet Dinner Buffet & Electrifying Dance Floor',
       owner: 'DJ & Executive Chef',
-      notes: 'Ensure all live counters are staffed; transition soundscape to high-energy dance party.'
+      notes:
+        'Ensure all live counters are staffed; transition soundscape to high-energy dance party.'
     },
     {
       id: 'rs-6',
@@ -178,21 +202,24 @@ export function getMockBackupPlan() {
       risk: 'Unseasonal Rain / Weather Disruptions',
       severity: 'High',
       triggerSigns: 'Barometer drop or dark clouds 4 hours prior; humidity spikes above 85%.',
-      mitigation: 'Pre-contract waterproof German hanger canopy and prepare indoor banquet hall as immediate seamless secondary backup.'
+      mitigation:
+        'Pre-contract waterproof German hanger canopy and prepare indoor banquet hall as immediate seamless secondary backup.'
     },
     {
       id: 'bp-2',
       risk: 'Primary Power Grid or Generator Interruption',
       severity: 'High',
       triggerSigns: 'Flickering stage lights or sound console brownout.',
-      mitigation: 'Mandate dual silent diesel generators (250 KVA) connected on automatic changeover switch (AMF panel) with dedicated technician onsite.'
+      mitigation:
+        'Mandate dual silent diesel generators (250 KVA) connected on automatic changeover switch (AMF panel) with dedicated technician onsite.'
     },
     {
       id: 'bp-3',
       risk: 'Key Vendor Delay or No-Show (DJ / Host / Makeup)',
       severity: 'Medium',
       triggerSigns: 'Vendor not checked in 90 minutes before their designated call time.',
-      mitigation: 'Maintain pre-briefed backup vendor roster on standby with emergency contacts programmed into lead coordinator phone.'
+      mitigation:
+        'Maintain pre-briefed backup vendor roster on standby with emergency contacts programmed into lead coordinator phone.'
     }
   ];
 }

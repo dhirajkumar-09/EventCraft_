@@ -25,11 +25,13 @@ export default function ProgressTracker() {
     <div className="card-glass rounded-2xl p-4 sm:p-5 shadow-lg border border-amber-200/80 dark:border-slate-800 mb-8 transition-all">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2.5">
-          <div className={`p-2 rounded-xl ${
-            progressPercentage === 100
-              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
-              : 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
-          }`}>
+          <div
+            className={`p-2 rounded-xl ${
+              progressPercentage === 100
+                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                : 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
+            }`}
+          >
             {progressPercentage === 100 ? (
               <Trophy className="w-5 h-5 animate-bounce" />
             ) : (
@@ -88,7 +90,8 @@ export default function ProgressTracker() {
 
       {progressPercentage === 100 && (
         <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-2.5 text-center">
-          🎉 Incredible! All preparation tasks & vendor bookings are complete. You're ready to celebrate!
+          🎉 Incredible! All preparation tasks & vendor bookings are complete. You're ready to
+          celebrate!
         </p>
       )}
     </div>

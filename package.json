@@ -17,7 +17,9 @@
     "test:ci": "npm --prefix server run test:coverage && npm --prefix client run test:coverage",
     "lint": "npx oxlint client server",
     "lint:client": "npm --prefix client run lint",
-    "lint:server": "npx oxlint server"
+    "lint:server": "npx oxlint server",
+    "format": "npx prettier --write \"client/src/**/*.{js,jsx,css}\" \"server/**/*.{js,json}\"",
+    "format:check": "npx prettier --check \"client/src/**/*.{js,jsx,css}\" \"server/**/*.{js,json}\""
   },
   "dependencies": {
     "@google/genai": "^2.31.0",

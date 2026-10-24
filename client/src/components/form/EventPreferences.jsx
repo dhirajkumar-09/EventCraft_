@@ -17,13 +17,7 @@ const TEXT_PREFERENCE_FIELDS = [
   }
 ];
 
-export default function EventPreferences({
-  formData,
-  errors,
-  touched,
-  onChange,
-  onBlur
-}) {
+export default function EventPreferences({ formData, errors, touched, onChange, onBlur }) {
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -49,11 +43,18 @@ export default function EventPreferences({
               }`}
               aria-invalid={Boolean(touched.cuisineDiet && errors.cuisineDiet)}
             >
-              <option value="" className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400">
+              <option
+                value=""
+                className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400"
+              >
                 Select catering style...
               </option>
               {CUISINE_DIETS.map((diet) => (
-                <option key={diet.value} value={diet.value} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                <option
+                  key={diet.value}
+                  value={diet.value}
+                  className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                >
                   {diet.label}
                 </option>
               ))}
@@ -101,8 +102,7 @@ export default function EventPreferences({
               htmlFor={id}
               className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2"
             >
-              {label}{' '}
-              <span className="text-slate-400 font-normal lowercase">(optional)</span>
+              {label} <span className="text-slate-400 font-normal lowercase">(optional)</span>
             </label>
             <div className="relative">
               <input

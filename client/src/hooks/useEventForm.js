@@ -57,14 +57,17 @@ export function useEventForm(selectedPreset, onClearPreset) {
     setErrors((prev) => ({ ...prev, [field]: error }));
   }, []);
 
-  const handleBlur = useCallback((eOrField) => {
-    const field = eOrField?.target ? eOrField.target.name : eOrField;
-    setTouched((prev) => ({ ...prev, [field]: true }));
-    setErrors((prev) => ({
-      ...prev,
-      [field]: validateFormField(field, formData[field])
-    }));
-  }, [formData]);
+  const handleBlur = useCallback(
+    (eOrField) => {
+      const field = eOrField?.target ? eOrField.target.name : eOrField;
+      setTouched((prev) => ({ ...prev, [field]: true }));
+      setErrors((prev) => ({
+        ...prev,
+        [field]: validateFormField(field, formData[field])
+      }));
+    },
+    [formData]
+  );
 
   const handleCurrencyChange = useCallback((currency, currencySymbol) => {
     setFormData((prev) => ({ ...prev, currency, currencySymbol }));
@@ -91,27 +94,30 @@ export function useEventForm(selectedPreset, onClearPreset) {
     }
   }, [onClearPreset]);
 
-  const handleSubmit = useCallback((e) => {
-    if (e?.preventDefault) e.preventDefault();
+  const handleSubmit = useCallback(
+    (e) => {
+      if (e?.preventDefault) e.preventDefault();
 
-    const allTouched = Object.keys(INITIAL_FORM_STATE).reduce(
-      (acc, key) => ({ ...acc, [key]: true }),
-      {}
-    );
-    setTouched(allTouched);
+      const allTouched = Object.keys(INITIAL_FORM_STATE).reduce(
+        (acc, key) => ({ ...acc, [key]: true }),
+        {}
+      );
+      setTouched(allTouched);
 
-    const validationErrors = validateAllFields(formData);
-    setErrors(validationErrors);
+      const validationErrors = validateAllFields(formData);
+      setErrors(validationErrors);
 
-    if (Object.keys(validationErrors).length > 0) {
-      const firstErrorKey = Object.keys(validationErrors)[0];
-      const el = document.querySelector(`[name="${firstErrorKey}"]`);
-      if (el) el.focus();
-      return;
-    }
+      if (Object.keys(validationErrors).length > 0) {
+        const firstErrorKey = Object.keys(validationErrors)[0];
+        const el = document.querySelector(`[name="${firstErrorKey}"]`);
+        if (el) el.focus();
+        return;
+      }
 
-    generatePlan(formData);
-  }, [formData, generatePlan]);
+      generatePlan(formData);
+    },
+    [formData, generatePlan]
+  );
 
   const daysRemaining = calculateDaysRemaining(formData.eventDate);
 

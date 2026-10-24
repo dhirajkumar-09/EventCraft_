@@ -4,39 +4,33 @@ import request from 'supertest';
 import app from '../server.js';
 
 test('Edge Cases - Rejects invalid section on POST /api/plan/regenerate-section with HTTP 400', async () => {
-  const res = await request(app)
-    .post('/api/plan/regenerate-section')
-    .send({
-      section: 'maliciousSection',
-      currentPlan: {},
-      eventType: 'Wedding'
-    });
+  const res = await request(app).post('/api/plan/regenerate-section').send({
+    section: 'maliciousSection',
+    currentPlan: {},
+    eventType: 'Wedding'
+  });
 
   assert.equal(res.status, 400);
   assert.ok(res.body.error.includes("Invalid section 'maliciousSection'"));
 });
 
 test('Edge Cases - Rejects empty message on POST /api/plan/chat with HTTP 400', async () => {
-  const res = await request(app)
-    .post('/api/plan/chat')
-    .send({
-      message: '   ',
-      currentPlan: {}
-    });
+  const res = await request(app).post('/api/plan/chat').send({
+    message: '   ',
+    currentPlan: {}
+  });
 
   assert.equal(res.status, 400);
   assert.ok(res.body.error.includes('Message cannot be empty'));
 });
 
 test('Edge Cases - Clamps boundary values (negative budget, zero guests, huge numbers)', async () => {
-  const res = await request(app)
-    .post('/api/plan/generate')
-    .send({
-      eventType: 'Birthday',
-      guestCount: -50,
-      totalBudget: -500000,
-      city: 'Delhi'
-    });
+  const res = await request(app).post('/api/plan/generate').send({
+    eventType: 'Birthday',
+    guestCount: -50,
+    totalBudget: -500000,
+    city: 'Delhi'
+  });
 
   assert.equal(res.status, 200);
   // Guest count clamped to min 10 in mockPlanService
@@ -46,13 +40,11 @@ test('Edge Cases - Clamps boundary values (negative budget, zero guests, huge nu
 });
 
 test('Edge Cases - Strips null bytes and control characters from string fields', async () => {
-  const res = await request(app)
-    .post('/api/plan/generate')
-    .send({
-      eventType: 'Wedding',
-      city: 'Mumbai\0\x08',
-      totalBudget: 1000000
-    });
+  const res = await request(app).post('/api/plan/generate').send({
+    eventType: 'Wedding',
+    city: 'Mumbai\0\x08',
+    totalBudget: 1000000
+  });
 
   assert.equal(res.status, 200);
   assert.ok(res.body.meta.city.includes('Mumbai'));
@@ -68,13 +60,11 @@ test('Edge Cases - Sanitizer detects SQL/HTML injection attempts in free-text fi
   ];
 
   for (const text of maliciousPayloads) {
-    const res = await request(app)
-      .post('/api/plan/generate')
-      .send({
-        eventType: 'Wedding',
-        city: 'Jaipur',
-        specialRequests: text
-      });
+    const res = await request(app).post('/api/plan/generate').send({
+      eventType: 'Wedding',
+      city: 'Jaipur',
+      specialRequests: text
+    });
 
     assert.equal(res.status, 400, `Expected 400 for payload: ${text}`);
     assert.ok(res.body.error.includes('Security alert'));

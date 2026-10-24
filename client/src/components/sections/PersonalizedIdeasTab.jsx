@@ -27,7 +27,8 @@ export default function PersonalizedIdeasTab() {
             <span>Personalized Experiences & 3 Wow Moments</span>
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Tailored specifically for {meta?.guestCount || 100} guests in {meta?.city || 'your city'} ({meta?.cuisineDiet || 'curated'} diet).
+            Tailored specifically for {meta?.guestCount || 100} guests in{' '}
+            {meta?.city || 'your city'} ({meta?.cuisineDiet || 'curated'} diet).
           </p>
         </div>
 
@@ -36,7 +37,9 @@ export default function PersonalizedIdeasTab() {
           disabled={isRegenerating}
           className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-slate-700 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-slate-700 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 cursor-pointer shadow-xs self-start sm:self-auto"
         >
-          <RotateCw className={`w-3.5 h-3.5 ${isRegenerating ? 'animate-spin text-amber-600' : ''}`} />
+          <RotateCw
+            className={`w-3.5 h-3.5 ${isRegenerating ? 'animate-spin text-amber-600' : ''}`}
+          />
           <span>{isRegenerating ? 'Generating Fresh Ideas...' : 'Regenerate Ideas'}</span>
         </button>
       </div>

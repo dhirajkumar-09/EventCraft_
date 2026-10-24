@@ -8,7 +8,10 @@ export function useThemeMode() {
   const [themeMode, setThemeMode] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.THEME);
     if (saved === 'dark' || saved === 'light') return saved;
-    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+    if (
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-color-scheme: dark)').matches
+    ) {
       return 'dark';
     }
     return 'light';

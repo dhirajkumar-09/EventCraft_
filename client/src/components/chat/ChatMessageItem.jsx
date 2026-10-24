@@ -8,9 +8,7 @@ export default function ChatMessageItem({ message }) {
     <div className={`flex gap-3 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
       <div
         className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-white shadow-xs ${
-          isUser
-            ? 'bg-slate-700 dark:bg-slate-700'
-            : 'bg-gradient-to-tr from-amber-600 to-rose-600'
+          isUser ? 'bg-slate-700 dark:bg-slate-700' : 'bg-gradient-to-tr from-amber-600 to-rose-600'
         }`}
       >
         {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}

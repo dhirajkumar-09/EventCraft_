@@ -13,7 +13,8 @@ export default function PdfExportPane({ plan, meta, activeExportMode }) {
           Printable Physical Vendor & Task Checklist
         </h4>
         <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
-          Generates an ink-friendly document with checkboxes, vendor negotiation prompts, and deadlines.
+          Generates an ink-friendly document with checkboxes, vendor negotiation prompts, and
+          deadlines.
         </p>
 
         <div className="pt-2 flex justify-center gap-3">
@@ -38,7 +39,8 @@ export default function PdfExportPane({ plan, meta, activeExportMode }) {
         Download Complete Master Event Plan (PDF)
       </h4>
       <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
-        Structured multi-page document featuring all 7 sections, exact budget math, countdown milestones, and backup protocols.
+        Structured multi-page document featuring all 7 sections, exact budget math, countdown
+        milestones, and backup protocols.
       </p>
 
       <div className="pt-2 flex justify-center gap-3">

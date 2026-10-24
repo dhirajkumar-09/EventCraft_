@@ -58,7 +58,10 @@ export function usePlanManager({
       setPlan((prev) => ({ ...prev, [sectionKey]: updatedSection }));
       triggerCelebration();
     } catch (err) {
-      alert(`Could not regenerate section: ${err.message}`);
+      if (typeof window !== 'undefined' && typeof window.alert === 'function') {
+        window.alert(`Could not regenerate section: ${err.message}`);
+      }
+      setError(`Could not regenerate section: ${err.message}`);
     } finally {
       setRegeneratingSection(null);
     }

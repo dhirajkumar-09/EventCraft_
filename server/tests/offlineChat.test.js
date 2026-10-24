@@ -32,7 +32,11 @@ test('Offline Chat - Incorporates kid-friendly activities and special treats men
   };
   const currentPlan = generateMockEventPlan(initialInput);
 
-  const result = handleOfflineChat('We have 15 children attending, add kid friendly games', currentPlan, initialInput);
+  const result = handleOfflineChat(
+    'We have 15 children attending, add kid friendly games',
+    currentPlan,
+    initialInput
+  );
 
   assert.ok(result.replyMessage.includes('Kids Fun Zone'));
   const hasKidGame = result.updatedPlan.personalizedIdeas.gamesOrActivities.some((g) =>
@@ -51,7 +55,11 @@ test('Offline Chat - Appends tailored musical playlist segment', () => {
   };
   const currentPlan = generateMockEventPlan(initialInput);
 
-  const result = handleOfflineChat('Amp up the dance music and DJ playlist', currentPlan, initialInput);
+  const result = handleOfflineChat(
+    'Amp up the dance music and DJ playlist',
+    currentPlan,
+    initialInput
+  );
 
   assert.ok(result.replyMessage.includes('playlist segment'));
   const hasMusic = result.updatedPlan.personalizedIdeas.music.some((m) =>
@@ -64,7 +72,11 @@ test('Offline Chat - Handles generic modification request reassuringly', () => {
   const initialInput = { eventType: 'Gala', totalBudget: 300000, city: 'Delhi' };
   const currentPlan = generateMockEventPlan(initialInput);
 
-  const result = handleOfflineChat('Focus on sustainable zero-waste decor', currentPlan, initialInput);
+  const result = handleOfflineChat(
+    'Focus on sustainable zero-waste decor',
+    currentPlan,
+    initialInput
+  );
 
   assert.ok(result.replyMessage.includes('sustainable zero-waste decor'));
   assert.ok(result.updatedPlan);

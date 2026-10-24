@@ -17,11 +17,128 @@ import { generateAdaptiveTimeline } from './timelineGenerator.js';
 export { generateAdaptiveTimeline };
 
 /**
+ * Calculates remaining days from target event date
+ * @param {string} [eventDate]
+ * @returns {number} Days remaining (default: 60)
+ */
+function calculateDaysRemaining(eventDate) {
+  if (!eventDate) return 60;
+  const target = new Date(eventDate);
+  const today = new Date();
+  const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+  return !isNaN(diff) && diff > 0 ? diff : 60;
+}
+
+/**
+ * Computes culturally relevant celebration theme name
+ * @param {string} eventType
+ * @param {string} city
+ * @param {string} themePreference
+ * @returns {string} Theme title
+ */
+function determineThemeTitle(eventType, city, themePreference) {
+  const cityLower = (city || '').toLowerCase();
+  const isMumbai = cityLower.includes('mumbai') || cityLower.includes('bombay');
+  const isJaipur = cityLower.includes('jaipur') || cityLower.includes('rajasthan');
+  const lowerType = (eventType || '').toLowerCase();
+
+  if (lowerType.includes('wedding')) {
+    if (isJaipur) return 'Royal Rajputana Heritage Vivah';
+    if (isMumbai) return 'Coastal Luxe Bollywood Glamour';
+    return 'Eternal Blooms & Golden Twilight';
+  }
+  if (lowerType.includes('birthday')) {
+    return 'Gilded Jubilee & Carnival of Lights';
+  }
+  if (lowerType.includes('baby')) {
+    return 'Pastel Clouds & Starlight Blessing';
+  }
+  return `${themePreference || 'Celebratory'} Soirée`;
+}
+
+/**
+ * Constructs standard 9-category breakdown array
+ * @param {number} numericBudget
+ * @param {string} venueType
+ * @param {string} city
+ * @param {string} cuisineDiet
+ * @param {number} guests
+ * @param {string} currencySymbol
+ * @returns {Array<Object>}
+ */
+function buildBudgetCategories(
+  numericBudget,
+  venueType,
+  city,
+  cuisineDiet,
+  guests,
+  currencySymbol
+) {
+  const perGuest = Math.round((numericBudget * 0.28) / (guests || 1));
+  return [
+    {
+      category: 'Venue & Infrastructure',
+      amount: Math.round(numericBudget * 0.24),
+      percentage: 24,
+      note: `${venueType.toUpperCase()} venue rental in prime ${city}, including security and AC generator backup`
+    },
+    {
+      category: 'Catering & Beverages',
+      amount: Math.round(numericBudget * 0.28),
+      percentage: 28,
+      note: `Full multi-course ${cuisineDiet} buffet with live specialty counters for ~${guests} guests (~${currencySymbol}${perGuest}/guest)`
+    },
+    {
+      category: 'Decor, Florals & Lighting',
+      amount: Math.round(numericBudget * 0.14),
+      percentage: 14,
+      note: 'Themed entrance arch, stage backdrop, fairy light canopies and fresh seasonal floral arrangements'
+    },
+    {
+      category: 'Photography & Videography',
+      amount: Math.round(numericBudget * 0.1),
+      percentage: 10,
+      note: '2 Candid photographers + 1 traditional cinematic videographer + teaser reel within 48h'
+    },
+    {
+      category: 'Entertainment & Music',
+      amount: Math.round(numericBudget * 0.06),
+      percentage: 6,
+      note: 'Professional live DJ/Emcee, sound console, wireless mics, and ambient uplighting'
+    },
+    {
+      category: 'Attire, Hair & Makeup',
+      amount: Math.round(numericBudget * 0.04),
+      percentage: 4,
+      note: 'Stylist, professional makeup artist, and coordinating celebratory wardrobe'
+    },
+    {
+      category: 'Invitations & Digital Stationery',
+      amount: Math.round(numericBudget * 0.02),
+      percentage: 2,
+      note: 'Animated WhatsApp digital invites, personalized RSVP portal, and printed welcome board'
+    },
+    {
+      category: 'Guest Transport & Logistics',
+      amount: Math.round(numericBudget * 0.02),
+      percentage: 2,
+      note: 'Designated concierge, airport/station transfer support, and valet parking coordination'
+    },
+    {
+      category: 'Emergency Contingency (10%)',
+      amount: Math.round(numericBudget * 0.1),
+      percentage: 10,
+      note: 'Vital 10% reserve for last-minute guest additions, overtime charges, or weather adaptions'
+    }
+  ];
+}
+
+/**
  * Computes an end-to-end master event plan deterministically with strict budget math
  * @param {Object} input - Event parameters
  * @returns {Object} Structured event plan conforming to eventPlanJsonSchema
  */
-export function generateMockEventPlan(input) {
+export function generateMockEventPlan(input = {}) {
   const {
     eventType = 'Wedding',
     eventDate,
@@ -40,95 +157,38 @@ export function generateMockEventPlan(input) {
 
   const numericBudget = Math.max(1000, Math.round(Number(totalBudget) || 1000000));
   const guests = Math.max(10, Math.round(Number(guestCount) || 100));
-
-  let daysRemaining = 60;
-  if (eventDate) {
-    const target = new Date(eventDate);
-    const today = new Date();
-    const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
-    if (!isNaN(diff) && diff > 0) daysRemaining = diff;
-  }
+  const daysRemaining = calculateDaysRemaining(eventDate);
 
   const cityLower = (city || '').toLowerCase();
   const isMumbai = cityLower.includes('mumbai') || cityLower.includes('bombay');
   const isJaipur = cityLower.includes('jaipur') || cityLower.includes('rajasthan');
 
   const palette = getPaletteForEventType(eventType);
+  const themeTitle = determineThemeTitle(eventType, city, themePreference);
+  const rawCategories = buildBudgetCategories(
+    numericBudget,
+    venueType,
+    city,
+    cuisineDiet,
+    guests,
+    currencySymbol
+  );
 
-  let themeTitle = `${themePreference || 'Celebratory'} Soirée`;
-  if (eventType.toLowerCase().includes('wedding')) {
-    themeTitle = isJaipur
-      ? 'Royal Rajputana Heritage Vivah'
-      : isMumbai
-      ? 'Coastal Luxe Bollywood Glamour'
-      : 'Eternal Blooms & Golden Twilight';
-  } else if (eventType.toLowerCase().includes('birthday')) {
-    themeTitle = 'Gilded Jubilee & Carnival of Lights';
-  } else if (eventType.toLowerCase().includes('baby')) {
-    themeTitle = 'Pastel Clouds & Starlight Blessing';
-  }
-
-  const rawCategories = [
-    {
-      category: 'Venue & Infrastructure',
-      amount: Math.round(numericBudget * 0.24),
-      percentage: 24,
-      note: `${venueType.toUpperCase()} venue rental in prime ${city}, including security and AC generator backup`
-    },
-    {
-      category: 'Catering & Beverages',
-      amount: Math.round(numericBudget * 0.28),
-      percentage: 28,
-      note: `Full multi-course ${cuisineDiet} buffet with live specialty counters for ~${guests} guests (~${currencySymbol}${Math.round((numericBudget * 0.28) / guests)}/guest)`
-    },
-    {
-      category: 'Decor, Florals & Lighting',
-      amount: Math.round(numericBudget * 0.14),
-      percentage: 14,
-      note: `Themed entrance arch, stage backdrop, fairy light canopies and fresh seasonal floral arrangements`
-    },
-    {
-      category: 'Photography & Videography',
-      amount: Math.round(numericBudget * 0.10),
-      percentage: 10,
-      note: `2 Candid photographers + 1 traditional cinematic videographer + teaser reel within 48h`
-    },
-    {
-      category: 'Entertainment & Music',
-      amount: Math.round(numericBudget * 0.06),
-      percentage: 6,
-      note: `Professional live DJ/Emcee, sound console, wireless mics, and ambient uplighting`
-    },
-    {
-      category: 'Attire, Hair & Makeup',
-      amount: Math.round(numericBudget * 0.04),
-      percentage: 4,
-      note: `Stylist, professional makeup artist, and coordinating celebratory wardrobe`
-    },
-    {
-      category: 'Invitations & Digital Stationery',
-      amount: Math.round(numericBudget * 0.02),
-      percentage: 2,
-      note: `Animated WhatsApp digital invites, personalized RSVP portal, and printed welcome board`
-    },
-    {
-      category: 'Guest Transport & Logistics',
-      amount: Math.round(numericBudget * 0.02),
-      percentage: 2,
-      note: `Designated concierge, airport/station transfer support, and valet parking coordination`
-    },
-    {
-      category: 'Emergency Contingency (10%)',
-      amount: Math.round(numericBudget * 0.10),
-      percentage: 10,
-      note: `Vital 10% reserve for last-minute guest additions, overtime charges, or weather adaptions`
-    }
-  ];
-
-  const budgetResult = validateAndNormalizeBudget(rawCategories, numericBudget, currency, currencySymbol);
+  const budgetResult = validateAndNormalizeBudget(
+    rawCategories,
+    numericBudget,
+    currency,
+    currencySymbol
+  );
   const timeline = generateAdaptiveTimeline(daysRemaining, eventType);
   const vendorChecklist = getMockVendors(numericBudget, currencySymbol, daysRemaining, cuisineDiet);
-  const personalizedIdeas = getMockPersonalizedIdeas(eventType, cuisineDiet, isJaipur, isMumbai, specialRequests);
+  const personalizedIdeas = getMockPersonalizedIdeas(
+    eventType,
+    cuisineDiet,
+    isJaipur,
+    isMumbai,
+    specialRequests
+  );
   const runSheet = getMockRunSheet();
   const backupPlan = getMockBackupPlan();
 
@@ -142,7 +202,7 @@ export function generateMockEventPlan(input) {
         `Curated multi-course ${cuisineDiet} culinary experience with live counter stations`,
         `Thematic immersion with ${themePreference || 'celebration'} decor and bespoke lighting`,
         `Strict adherence to budget with guaranteed 10% safety contingency reserve`,
-        `Dedicated emergency contingency and vendor negotiation protocols`
+        'Dedicated emergency contingency and vendor negotiation protocols'
       ]
     },
     budget: {
@@ -152,8 +212,8 @@ export function generateMockEventPlan(input) {
       categories: budgetResult.categories,
       moneySavingTips: [
         `Book your ${venueType} during weekday/Sunday afternoon slots or negotiate complimentary basic sound & AC generator inclusions to save up to 15%.`,
-        `Choose seasonal, locally grown regional florals (marigold, tuberose, jasmine) over imported blooms for a 35% reduction in decor expenditures.`,
-        `Opt for customized digital invitations and interactive RSVP microsite rather than heavy printed boxed cards to save significant print & courier costs.`
+        'Choose seasonal, locally grown regional florals (marigold, tuberose, jasmine) over imported blooms for a 35% reduction in decor expenditures.',
+        'Opt for customized digital invitations and interactive RSVP microsite rather than heavy printed boxed cards to save significant print & courier costs.'
       ]
     },
     timeline,

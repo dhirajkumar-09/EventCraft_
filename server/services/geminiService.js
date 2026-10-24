@@ -14,6 +14,7 @@ import {
 } from '../prompts/eventPlanPrompts.js';
 import { eventPlanJsonSchema } from '../schemas/eventPlanSchema.js';
 import { validateAndNormalizeBudget } from '../utils/budgetValidator.js';
+import { logger } from '../utils/logger.js';
 import { generateMockEventPlan } from './mockPlanService.js';
 import { handleOfflineChat } from './offlineChatService.js';
 
@@ -96,24 +97,21 @@ function normalizePlanBudget(plan, input) {
 }
 
 /**
- * Generates an end-to-end structured event plan
- * @param {Object} input - Validated celebration parameters
- * @returns {Promise<Object>} Full structured event plan
+ * Queries Gemini candidate models in priority sequence with timeout protection
+ * @param {GoogleGenAI} client - GenAI client instance
+ * @param {string} prompt - Prompt contents
+ * @param {Object} schema - Expected response JSON schema
+ * @param {number} temperature - Model temperature
+ * @param {number} timeoutMs - Timeout threshold in milliseconds
+ * @param {string} operationName - Name of operation for logging
+ * @returns {Promise<Object|null>} Parsed JSON response or null on failure
  */
-export async function generateEventPlan(input) {
-  const client = getClient(input.apiKey);
-
-  if (!client) {
-    console.info('[EventCraft AI] No Gemini API key provided; generating with intelligent planner engine.');
-    return generateMockEventPlan(input);
-  }
-
-  const prompt = buildMasterPlanPrompt(input);
+async function queryCandidateModels(client, prompt, schema, temperature, timeoutMs, operationName) {
   let lastError = null;
 
   for (const modelName of GEMINI_CONFIG.CANDIDATE_MODELS) {
     try {
-      console.log(`[EventCraft AI] Querying Google GenAI model '${modelName}'...`);
+      logger.info(`Querying Google GenAI model '${modelName}' for ${operationName}...`);
       const response = await withTimeout(
         client.models.generateContent({
           model: modelName,
@@ -121,25 +119,55 @@ export async function generateEventPlan(input) {
           config: {
             systemInstruction: SYSTEM_PROMPT,
             responseMimeType: 'application/json',
-            responseSchema: eventPlanJsonSchema,
-            temperature: GEMINI_CONFIG.TEMPERATURE
+            responseSchema: schema,
+            temperature
           }
         }),
-        GEMINI_CONFIG.TIMEOUTS.PLAN_GENERATION_MS
+        timeoutMs
       );
 
-      const parsedPlan = extractAndParseJson(response.text);
-      normalizePlanBudget(parsedPlan, input);
-
-      console.log(`[EventCraft AI] Successfully generated plan with model '${modelName}'!`);
-      return parsedPlan;
+      const parsed = extractAndParseJson(response.text);
+      logger.info(`Successfully generated ${operationName} with model '${modelName}'!`);
+      return parsed;
     } catch (err) {
-      console.warn(`[EventCraft AI] Model '${modelName}' attempt failed: ${err.message}`);
+      logger.warn(`Model '${modelName}' attempt for ${operationName} failed: ${err.message}`);
       lastError = err;
     }
   }
 
-  console.warn('[EventCraft AI] Falling back to intelligent planner engine:', lastError?.message);
+  logger.warn(`All candidate models failed for ${operationName}: ${lastError?.message}`);
+  return null;
+}
+
+/**
+ * Generates an end-to-end structured event plan
+ * @param {Object} input - Validated celebration parameters
+ * @returns {Promise<Object>} Full structured event plan
+ */
+export async function generateEventPlan(input) {
+  const client = getClient(input?.apiKey);
+
+  if (!client) {
+    logger.info('No Gemini API key provided; generating with intelligent planner engine.');
+    return generateMockEventPlan(input);
+  }
+
+  const prompt = buildMasterPlanPrompt(input);
+  const parsedPlan = await queryCandidateModels(
+    client,
+    prompt,
+    eventPlanJsonSchema,
+    GEMINI_CONFIG.TEMPERATURE,
+    GEMINI_CONFIG.TIMEOUTS.PLAN_GENERATION_MS,
+    'master plan'
+  );
+
+  if (parsedPlan) {
+    normalizePlanBudget(parsedPlan, input);
+    return parsedPlan;
+  }
+
+  logger.info('Falling back to intelligent planner engine for master plan.');
   return generateMockEventPlan(input);
 }
 
@@ -154,7 +182,7 @@ export async function regenerateSection(sectionKey, currentPlan, input) {
   const client = getClient(input?.apiKey);
 
   if (!client) {
-    console.info(`[EventCraft AI] Regenerating section '${sectionKey}' using intelligent planner engine.`);
+    logger.info(`Regenerating section '${sectionKey}' using intelligent planner engine.`);
     const freshPlan = generateMockEventPlan(input);
     return freshPlan[sectionKey] || currentPlan[sectionKey];
   }
@@ -168,39 +196,27 @@ export async function regenerateSection(sectionKey, currentPlan, input) {
     required: [sectionKey]
   };
 
-  for (const modelName of GEMINI_CONFIG.CANDIDATE_MODELS) {
-    try {
-      const response = await withTimeout(
-        client.models.generateContent({
-          model: modelName,
-          contents: prompt,
-          config: {
-            systemInstruction: SYSTEM_PROMPT,
-            responseMimeType: 'application/json',
-            responseSchema: sectionSchema,
-            temperature: 0.8
-          }
-        }),
-        GEMINI_CONFIG.TIMEOUTS.SECTION_REGEN_MS
-      );
+  const parsed = await queryCandidateModels(
+    client,
+    prompt,
+    sectionSchema,
+    0.8,
+    GEMINI_CONFIG.TIMEOUTS.SECTION_REGEN_MS,
+    `section '${sectionKey}'`
+  );
 
-      const parsed = extractAndParseJson(response.text);
-      if (parsed?.[sectionKey]) {
-        if (sectionKey === 'budget' && parsed.budget?.categories) {
-          const normalized = validateAndNormalizeBudget(
-            parsed.budget.categories,
-            input.totalBudget,
-            input.currency,
-            input.currencySymbol
-          );
-          parsed.budget.categories = normalized.categories;
-          parsed.budget.totalBudget = normalized.totalBudget;
-        }
-        return parsed[sectionKey];
-      }
-    } catch (err) {
-      console.warn(`[EventCraft AI] Regenerate section failed on ${modelName}:`, err.message);
+  if (parsed?.[sectionKey]) {
+    if (sectionKey === 'budget' && parsed.budget?.categories) {
+      const normalized = validateAndNormalizeBudget(
+        parsed.budget.categories,
+        input.totalBudget,
+        input.currency,
+        input.currencySymbol
+      );
+      parsed.budget.categories = normalized.categories;
+      parsed.budget.totalBudget = normalized.totalBudget;
     }
+    return parsed[sectionKey];
   }
 
   const fresh = generateMockEventPlan(input);
@@ -227,7 +243,8 @@ export async function chatWithPlanner(userMessage, currentPlan, chatHistory = []
     properties: {
       replyMessage: {
         type: 'string',
-        description: 'Warm, professional, reassuring answer explaining changes made or offering actionable advice.'
+        description:
+          'Warm, professional, reassuring answer explaining changes made or offering actionable advice.'
       },
       updatedPlan: eventPlanJsonSchema
     },
@@ -235,32 +252,20 @@ export async function chatWithPlanner(userMessage, currentPlan, chatHistory = []
   };
 
   const prompt = buildChatPlannerPrompt(userMessage, currentPlan, chatHistory, input);
+  const parsed = await queryCandidateModels(
+    client,
+    prompt,
+    chatSchema,
+    GEMINI_CONFIG.TEMPERATURE,
+    GEMINI_CONFIG.TIMEOUTS.CHAT_RESPONSE_MS,
+    'planner chat'
+  );
 
-  for (const modelName of GEMINI_CONFIG.CANDIDATE_MODELS) {
-    try {
-      const response = await withTimeout(
-        client.models.generateContent({
-          model: modelName,
-          contents: prompt,
-          config: {
-            systemInstruction: SYSTEM_PROMPT,
-            responseMimeType: 'application/json',
-            responseSchema: chatSchema,
-            temperature: GEMINI_CONFIG.TEMPERATURE
-          }
-        }),
-        GEMINI_CONFIG.TIMEOUTS.CHAT_RESPONSE_MS
-      );
-
-      const parsed = extractAndParseJson(response.text);
-      if (parsed.updatedPlan?.budget?.categories) {
-        normalizePlanBudget(parsed.updatedPlan, input);
-      }
-
-      return parsed;
-    } catch (err) {
-      console.warn(`[EventCraft AI] Chat failed on ${modelName}:`, err.message);
+  if (parsed?.replyMessage) {
+    if (parsed.updatedPlan?.budget?.categories) {
+      normalizePlanBudget(parsed.updatedPlan, input);
     }
+    return parsed;
   }
 
   return handleOfflineChat(userMessage, currentPlan, input);

@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 
 import { generalLimiter, aiLimiter } from './middleware/rateLimiter.js';
 import { sanitizeEventInput } from './middleware/sanitizer.js';
+import { logger } from './utils/logger.js';
 import {
   handleGeneratePlan,
   handleRegenerateSection,
@@ -31,22 +32,24 @@ const allowedOrigins = [
   'http://127.0.0.1:5000'
 ];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    // allow requests with no origin (like mobile apps, curl, postman)
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      return callback(null, true);
-    }
-    // Allow any localhost during development
-    if (/^http:\/\/localhost:\d+$/.test(origin) || /^http:\/\/127\.0\.0\.1:\d+$/.test(origin)) {
-      return callback(null, true);
-    }
-    callback(null, true);
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps, curl, postman)
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        return callback(null, true);
+      }
+      // Allow any localhost during development
+      if (/^http:\/\/localhost:\d+$/.test(origin) || /^http:\/\/127\.0\.0\.1:\d+$/.test(origin)) {
+        return callback(null, true);
+      }
+      callback(null, true);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  })
+);
 
 // Body parsing with size limit
 app.use(express.json({ limit: '2mb' }));
@@ -62,8 +65,18 @@ app.get(['/api/health', '/health'], (req, res) => {
 app.get(['/api/status', '/status'], handleGetStatus);
 
 // AI Planning routes with sanitization and dedicated AI rate limiter
-app.post(['/api/plan/generate', '/plan/generate'], aiLimiter, sanitizeEventInput, handleGeneratePlan);
-app.post(['/api/plan/regenerate-section', '/plan/regenerate-section'], aiLimiter, sanitizeEventInput, handleRegenerateSection);
+app.post(
+  ['/api/plan/generate', '/plan/generate'],
+  aiLimiter,
+  sanitizeEventInput,
+  handleGeneratePlan
+);
+app.post(
+  ['/api/plan/regenerate-section', '/plan/regenerate-section'],
+  aiLimiter,
+  sanitizeEventInput,
+  handleRegenerateSection
+);
 app.post(['/api/plan/chat', '/plan/chat'], aiLimiter, sanitizeEventInput, handleChatPlanner);
 
 // 404 handler for API routes
@@ -73,7 +86,7 @@ app.use(['/api/*', '/*'], (req, res) => {
 
 // Centralized error handling
 app.use((err, req, res, _next) => {
-  console.error('[EventCraft Server Error]:', err);
+  logger.error('Unhandled server error:', err.message || err);
   const status = err.status || 500;
   const message = err.message || 'Internal server error occurred while processing your event plan.';
   res.status(status).json({
@@ -88,9 +101,11 @@ const isDirectExecution = process.argv[1] && path.resolve(process.argv[1]) === _
 // Start listening only in standalone server mode (not when imported in tests or Vercel serverless functions)
 if (!process.env.VERCEL && isDirectExecution) {
   app.listen(PORT, () => {
-    console.log(`✨ EventCraft AI server running on http://localhost:${PORT}`);
-    console.log(`   Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`   Gemini Status: ${process.env.GEMINI_API_KEY ? 'Configured ✅' : 'Demo Mode (No API key in .env) 💡'}`);
+    logger.info(`Server running on http://localhost:${PORT}`);
+    logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    logger.info(
+      `Gemini Status: ${process.env.GEMINI_API_KEY ? 'Configured' : 'Demo Mode (Intelligent Planner)'}`
+    );
   });
 }
 

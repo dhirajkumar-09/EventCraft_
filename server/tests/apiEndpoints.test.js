@@ -55,33 +55,29 @@ test('API Integration - POST /api/plan/generate creates full master plan matchin
 
 test('API Integration - POST /api/plan/regenerate-section updates only targeted section', async () => {
   // First generate plan
-  const genRes = await request(app)
-    .post('/api/plan/generate')
-    .send({
-      eventType: 'Birthday',
-      city: 'Mumbai',
-      totalBudget: 300000,
-      currency: 'INR',
-      currencySymbol: '₹',
-      guestCount: 50,
-      venueType: 'indoor',
-      cuisineDiet: 'mixed'
-    });
+  const genRes = await request(app).post('/api/plan/generate').send({
+    eventType: 'Birthday',
+    city: 'Mumbai',
+    totalBudget: 300000,
+    currency: 'INR',
+    currencySymbol: '₹',
+    guestCount: 50,
+    venueType: 'indoor',
+    cuisineDiet: 'mixed'
+  });
 
   const plan = genRes.body.plan;
 
-  const regenRes = await request(app)
-    .post('/api/plan/regenerate-section')
-    .send({
-      section: 'personalizedIdeas',
-      currentPlan: plan,
-      eventType: 'Birthday',
-      city: 'Mumbai',
-      totalBudget: 300000,
-      currency: 'INR',
-      currencySymbol: '₹',
-      guestCount: 50
-    });
+  const regenRes = await request(app).post('/api/plan/regenerate-section').send({
+    section: 'personalizedIdeas',
+    currentPlan: plan,
+    eventType: 'Birthday',
+    city: 'Mumbai',
+    totalBudget: 300000,
+    currency: 'INR',
+    currencySymbol: '₹',
+    guestCount: 50
+  });
 
   assert.equal(regenRes.status, 200);
   assert.equal(regenRes.body.success, true);
@@ -91,31 +87,27 @@ test('API Integration - POST /api/plan/regenerate-section updates only targeted 
 });
 
 test('API Integration - POST /api/plan/chat updates plan and returns conversational advice', async () => {
-  const genRes = await request(app)
-    .post('/api/plan/generate')
-    .send({
-      eventType: 'Wedding',
-      city: 'Jaipur',
-      totalBudget: 1000000,
-      currency: 'INR',
-      currencySymbol: '₹',
-      guestCount: 150,
-      venueType: 'banquet',
-      cuisineDiet: 'veg'
-    });
+  const genRes = await request(app).post('/api/plan/generate').send({
+    eventType: 'Wedding',
+    city: 'Jaipur',
+    totalBudget: 1000000,
+    currency: 'INR',
+    currencySymbol: '₹',
+    guestCount: 150,
+    venueType: 'banquet',
+    cuisineDiet: 'veg'
+  });
 
   const plan = genRes.body.plan;
 
-  const chatRes = await request(app)
-    .post('/api/plan/chat')
-    .send({
-      message: 'Can we reduce total budget by 20%?',
-      currentPlan: plan,
-      chatHistory: [],
-      eventType: 'Wedding',
-      city: 'Jaipur',
-      totalBudget: 1000000
-    });
+  const chatRes = await request(app).post('/api/plan/chat').send({
+    message: 'Can we reduce total budget by 20%?',
+    currentPlan: plan,
+    chatHistory: [],
+    eventType: 'Wedding',
+    city: 'Jaipur',
+    totalBudget: 1000000
+  });
 
   assert.equal(chatRes.status, 200);
   assert.equal(chatRes.body.success, true);

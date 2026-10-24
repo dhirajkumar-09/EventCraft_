@@ -64,11 +64,13 @@ export default function ApiKeyModal({ isOpen, onClose }) {
 
         <div className="p-6 space-y-4">
           {/* Server status banner */}
-          <div className={`p-3.5 rounded-2xl border flex items-start gap-3 ${
-            isServerConfigured
-              ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
-              : 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200'
-          }`}>
+          <div
+            className={`p-3.5 rounded-2xl border flex items-start gap-3 ${
+              isServerConfigured
+                ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
+                : 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200'
+            }`}
+          >
             <ShieldCheck className="w-5 h-5 shrink-0 mt-0.5" />
             <div className="text-xs">
               <p className="font-bold">
@@ -97,7 +99,8 @@ export default function ApiKeyModal({ isOpen, onClose }) {
                 className="w-full px-4 py-2.5 rounded-xl border bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-amber-500 focus:outline-none text-xs font-mono"
               />
               <p className="text-[11px] text-slate-400 mt-1">
-                Keys are never stored in public repositories or sent anywhere except via the secure server proxy.
+                Keys are never stored in public repositories or sent anywhere except via the secure
+                server proxy.
               </p>
             </div>
 

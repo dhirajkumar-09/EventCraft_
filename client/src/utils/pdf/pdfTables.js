@@ -30,8 +30,20 @@ export function renderBudgetTable(doc, budget, currencyPrefix, startY) {
       `${currencyPrefix}${Number(c.amount || 0).toLocaleString()}`,
       c.note || 'Standard recommended allocation'
     ]),
-    foot: [['Total Verified Budget', '100%', `${currencyPrefix}${Number(budget?.totalBudget || 0).toLocaleString()}`, 'Strict 100% Mathematical Match Verified']],
-    footStyles: { fillColor: [248, 250, 252], textColor: PDF_COLORS.DARK, fontStyle: 'bold', fontSize: 9 },
+    foot: [
+      [
+        'Total Verified Budget',
+        '100%',
+        `${currencyPrefix}${Number(budget?.totalBudget || 0).toLocaleString()}`,
+        'Strict 100% Mathematical Match Verified'
+      ]
+    ],
+    footStyles: {
+      fillColor: [248, 250, 252],
+      textColor: PDF_COLORS.DARK,
+      fontStyle: 'bold',
+      fontSize: 9
+    },
     columnStyles: {
       0: { cellWidth: 38, fontStyle: 'bold' },
       1: { cellWidth: 18, halign: 'center' },
@@ -68,7 +80,14 @@ export function renderTimelineTable(doc, timeline) {
 export function renderVendorTable(doc, vendorChecklist) {
   renderSectionTable(doc, {
     theme: 'grid',
-    head: [['Vendor Category', 'Estimated Cost Range', 'Booking Deadline', 'Crucial Negotiation Strategy']],
+    head: [
+      [
+        'Vendor Category',
+        'Estimated Cost Range',
+        'Booking Deadline',
+        'Crucial Negotiation Strategy'
+      ]
+    ],
     body: (vendorChecklist || []).map((v) => [
       v.vendorType,
       v.estimatedCostRange || '-',
@@ -86,8 +105,16 @@ export function renderVendorTable(doc, vendorChecklist) {
 
 export function renderIdeasTable(doc, ideas) {
   const rows = [
-    ...((ideas?.wowMoments || []).map((w, i) => [`Wow Moment #${i + 1}`, w.title, `${w.description} (Tip: ${w.executionTip})`])),
-    ...((ideas?.menu || []).map((m) => ['Menu Course', m.course, Array.isArray(m.items) ? m.items.join(', ') : m.items])),
+    ...(ideas?.wowMoments || []).map((w, i) => [
+      `Wow Moment #${i + 1}`,
+      w.title,
+      `${w.description} (Tip: ${w.executionTip})`
+    ]),
+    ...(ideas?.menu || []).map((m) => [
+      'Menu Course',
+      m.course,
+      Array.isArray(m.items) ? m.items.join(', ') : m.items
+    ]),
     ['Decor Concept', 'Themes', (ideas?.decor || []).join(' • ')],
     ['Interactive Activities', 'Games & Fun', (ideas?.gamesOrActivities || []).join(' • ')],
     ['Music & Vibe', 'Soundscape', (ideas?.music || []).join(' • ')],
@@ -110,7 +137,12 @@ export function renderRunSheetTable(doc, runSheet) {
   renderSectionTable(doc, {
     theme: 'grid',
     head: [['Time Window', 'Celebration Milestone Activity', 'Primary Owner', 'Operational Notes']],
-    body: (runSheet || []).map((r) => [r.time, r.activity, r.owner || 'Lead Planner', r.notes || '-']),
+    body: (runSheet || []).map((r) => [
+      r.time,
+      r.activity,
+      r.owner || 'Lead Planner',
+      r.notes || '-'
+    ]),
     columnStyles: {
       0: { cellWidth: 34, fontStyle: 'bold' },
       1: { cellWidth: 55, fontStyle: 'bold' },
@@ -124,8 +156,18 @@ export function renderBackupPlanTable(doc, backupPlan) {
   renderSectionTable(doc, {
     theme: 'striped',
     head: [['Contingency Scenario', 'Severity', 'Trigger Signs', 'Actionable Mitigation Plan']],
-    headStyles: { fillColor: [190, 18, 60], textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 9 },
-    body: (backupPlan || []).map((b) => [b.risk, b.severity || 'Medium', b.triggerSigns, b.mitigation]),
+    headStyles: {
+      fillColor: [190, 18, 60],
+      textColor: [255, 255, 255],
+      fontStyle: 'bold',
+      fontSize: 9
+    },
+    body: (backupPlan || []).map((b) => [
+      b.risk,
+      b.severity || 'Medium',
+      b.triggerSigns,
+      b.mitigation
+    ]),
     columnStyles: {
       0: { cellWidth: 40, fontStyle: 'bold' },
       1: { cellWidth: 20, halign: 'center' },

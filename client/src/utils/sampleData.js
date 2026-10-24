@@ -20,7 +20,8 @@ export const SAMPLE_PRESETS = [
       themePreference: 'Royal Rajputana Heritage with Marigold & Gilded Brass',
       traditions: 'Traditional North Indian Vivah with Sangeet, Haldi & Baraat',
       ageGroup: 'Multi-generational (families, seniors & youth)',
-      specialRequests: 'Must feature authentic Rajasthani Dal Baati Churma counter, cold-pyro grand entrance, and sitar acoustic welcome.'
+      specialRequests:
+        'Must feature authentic Rajasthani Dal Baati Churma counter, cold-pyro grand entrance, and sitar acoustic welcome.'
     }
   },
   {
@@ -39,7 +40,8 @@ export const SAMPLE_PRESETS = [
       themePreference: 'Pastel Safari & Starlight Carnival',
       traditions: 'Contemporary family birthday celebration with cake smash & audio guestbook',
       ageGroup: 'Toddlers, kids (3-10 yrs) and young parents',
-      specialRequests: 'Dedicated soft-play ball pit area for toddlers, balloon twisting artist, and kid-friendly finger food.'
+      specialRequests:
+        'Dedicated soft-play ball pit area for toddlers, balloon twisting artist, and kid-friendly finger food.'
     }
   },
   {
@@ -56,9 +58,11 @@ export const SAMPLE_PRESETS = [
       currencySymbol: '₹',
       cuisineDiet: 'mixed',
       themePreference: 'Coastal Sunset Glamour & Champagne Jazz',
-      traditions: 'Vow renewal ceremony followed by sunset cocktail reception & live retro acoustic band',
+      traditions:
+        'Vow renewal ceremony followed by sunset cocktail reception & live retro acoustic band',
       ageGroup: 'Adults (30-65 yrs)',
-      specialRequests: 'Outdoor beachfront lighting with fairylight canopy, customized signature cocktail bar, and vintage dance floor.'
+      specialRequests:
+        'Outdoor beachfront lighting with fairylight canopy, customized signature cocktail bar, and vintage dance floor.'
     }
   },
   {
@@ -77,7 +81,8 @@ export const SAMPLE_PRESETS = [
       themePreference: 'Festival of Lights & Traditional Rangoli Soirée',
       traditions: 'Diwali pooja followed by Dandiya/Garba dance and community grand buffet',
       ageGroup: 'All age groups (families, neighborhood residents, children)',
-      specialRequests: 'Eco-friendly clay diya illumination, live jalebi counter, Dandiya stick distribution for all guests.'
+      specialRequests:
+        'Eco-friendly clay diya illumination, live jalebi counter, Dandiya stick distribution for all guests.'
     }
   }
 ];

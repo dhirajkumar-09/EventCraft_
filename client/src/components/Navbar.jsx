@@ -11,7 +11,6 @@ export default function Navbar({ onOpenExport, onOpenApiKey }) {
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-white/90 dark:bg-slate-900/90 border-b border-amber-200/60 dark:border-slate-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        
         {/* Brand with Bespoke EventCraft AI Logo */}
         <div className="flex items-center gap-3">
           <EventCraftLogo size={42} />
@@ -38,8 +37,12 @@ export default function Navbar({ onOpenExport, onOpenApiKey }) {
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all cursor-pointer"
             title="Configure Google Gemini API Key"
           >
-            <span className={`w-2 h-2 rounded-full ${isGeminiLive ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-            <span className="hidden sm:inline">{isGeminiLive ? 'Gemini AI Active' : 'API Key'}</span>
+            <span
+              className={`w-2 h-2 rounded-full ${isGeminiLive ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`}
+            />
+            <span className="hidden sm:inline">
+              {isGeminiLive ? 'Gemini AI Active' : 'API Key'}
+            </span>
             <Key className="w-3.5 h-3.5 opacity-60 ml-0.5" />
           </button>
 

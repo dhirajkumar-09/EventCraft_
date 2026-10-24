@@ -11,7 +11,7 @@ const INJECTION_PATTERNS = [
   /jailbreak/i,
   /<script[\s\S]*?>[\s\S]*?<\/script>/gi,
   /javascript:/gi,
-  /drop\s+table/i,
+  /drop\s+table/i
 ];
 
 /**
@@ -37,7 +37,7 @@ export function sanitizeString(val, maxLength = 1000) {
  */
 export function containsPromptInjection(text) {
   if (!text || typeof text !== 'string') return false;
-  return INJECTION_PATTERNS.some(regex => regex.test(text));
+  return INJECTION_PATTERNS.some((regex) => regex.test(text));
 }
 
 /**
@@ -63,7 +63,7 @@ export function sanitizeEventInput(req, res, next) {
     ageGroup,
     specialRequests,
     message, // for chat
-    section  // for regenerate-section
+    section // for regenerate-section
   } = req.body;
 
   // Check injection in text fields

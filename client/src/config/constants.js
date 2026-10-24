@@ -58,7 +58,7 @@ export const CONFETTI_COLORS = Object.freeze([
   '#BE123C', // Rose
   '#F59E0B', // Amber
   '#10B981', // Emerald
-  '#EC4899'  // Pink
+  '#EC4899' // Pink
 ]);
 
 export const DONUT_PALETTE = Object.freeze([
@@ -70,7 +70,7 @@ export const DONUT_PALETTE = Object.freeze([
   '#2563eb', // blue-600
   '#059669', // emerald-600
   '#c026d3', // fuchsia-600
-  '#475569'  // slate-600 (contingency reserve)
+  '#475569' // slate-600 (contingency reserve)
 ]);
 
 export const QUOTE_ROTATION_INTERVAL_MS = 2500;

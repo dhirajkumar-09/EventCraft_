@@ -12,10 +12,7 @@ export default function TabsNav() {
   const { activeTab, setActiveTab } = useEvent();
 
   return (
-    <nav
-      className="w-full mb-8 overflow-x-auto no-scrollbar py-2"
-      aria-label="Event Plan Sections"
-    >
+    <nav className="w-full mb-8 overflow-x-auto no-scrollbar py-2" aria-label="Event Plan Sections">
       <div className="flex items-center gap-2 min-w-max px-1">
         {NAVIGATION_TABS.map((tab) => {
           const Icon = tab.icon;
