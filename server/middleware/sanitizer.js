@@ -5,7 +5,7 @@
 const INJECTION_PATTERNS = [
   /ignore\s+(all\s+)?(previous|prior)\s+instructions/i,
   /system\s+override/i,
-  /disregard\s+(all\s+)?(guidelines|rules|prompts)/i,
+  /disregard\s+(all\s+|previous\s+|prior\s+)?(guidelines|rules|prompts|instructions)/i,
   /you\s+are\s+now\s+dan/i,
   /act\s+as\s+an\s+unfiltered/i,
   /jailbreak/i,

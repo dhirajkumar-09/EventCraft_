@@ -9,7 +9,12 @@
     "client": "npm --prefix client run dev",
     "postinstall": "cd client && npm install --include=dev",
     "build": "cd client && npm install --include=dev && npx vite build",
-    "test": "npm --prefix server test",
+    "test": "npm --prefix server test && npm --prefix client test",
+    "test:client": "npm --prefix client test",
+    "test:server": "npm --prefix server test",
+    "test:watch": "npm --prefix client run test:watch",
+    "test:coverage": "npm --prefix server run test:coverage && npm --prefix client run test:coverage",
+    "test:ci": "npm --prefix server run test:coverage && npm --prefix client run test:coverage",
     "lint": "npx oxlint client server",
     "lint:client": "npm --prefix client run lint",
     "lint:server": "npx oxlint server"
