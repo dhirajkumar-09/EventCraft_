@@ -1,14 +1,12 @@
 import React from 'react';
 import {
-  CheckSquare,
   RotateCw,
   MessageSquare,
   DollarSign,
   CalendarClock,
-  Sparkles,
   CheckCircle2
 } from 'lucide-react';
-import { useEvent } from '../../context/EventContext.jsx';
+import { useEvent } from '../../context/useEvent.js';
 
 export default function VendorChecklistTab() {
   const {

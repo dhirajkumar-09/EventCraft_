@@ -3,14 +3,12 @@ import {
   Clock,
   RotateCw,
   UserCheck,
-  StickyNote,
-  Sparkles,
-  ArrowRight
+  StickyNote
 } from 'lucide-react';
-import { useEvent } from '../../context/EventContext.jsx';
+import { useEvent } from '../../context/useEvent.js';
 
 export default function RunSheetTab() {
-  const { plan, meta, regenerateSingleSection, regeneratingSection } = useEvent();
+  const { plan, regenerateSingleSection, regeneratingSection } = useEvent();
 
   if (!plan?.runSheet) return null;
 

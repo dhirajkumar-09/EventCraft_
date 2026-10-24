@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { Sparkles, RotateCw, Copy, Check, Heart, Compass, BookmarkCheck } from 'lucide-react';
-import { useEvent } from '../../context/EventContext.jsx';
+import { Sparkles, RotateCw, Copy, Check, Compass, BookmarkCheck } from 'lucide-react';
+import { useEvent } from '../../context/useEvent.js';
 import Card3D from '../Card3D.jsx';
 
+/**
+ * Section 1: Executive Overview & Aesthetic Vision
+ */
 export default function OverviewTab() {
-  const { plan, meta, regenerateSingleSection, regeneratingSection } = useEvent();
+  const { plan, regenerateSingleSection, regeneratingSection } = useEvent();
   const [copiedHex, setCopiedHex] = useState(null);
 
   if (!plan?.overview) return null;
@@ -55,58 +58,66 @@ export default function OverviewTab() {
 
           <div className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-amber-200/60 dark:border-slate-800 backdrop-blur-sm">
             <p className="text-sm sm:text-base font-semibold italic text-amber-900 dark:text-amber-200">
-              "{overview.oneLineVibe}"
+              &quot;{overview.oneLineVibe}&quot;
             </p>
           </div>
 
-          <p className="mt-4 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-            {overview.summary}
-          </p>
+          <div className="mt-5">
+            <h5 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5">
+              <Compass className="w-3.5 h-3.5" />
+              <span>Architectural Summary</span>
+            </h5>
+            <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              {overview.summary}
+            </p>
+          </div>
         </div>
       </Card3D>
 
-      {/* Color Palette Swatches */}
-      {overview.colorPalette && overview.colorPalette.length > 0 && (
-        <div className="card-glass rounded-2xl p-6 border border-amber-200/60 dark:border-slate-800">
-          <h4 className="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-4 flex items-center gap-2">
-            <Compass className="w-4 h-4 text-amber-600" />
-            <span>Harmonious Color Palette</span>
+      {/* 5-Swatch Color Palette with Copy-to-Clipboard */}
+      <div className="card-glass rounded-2xl p-6 border border-amber-200/60 dark:border-slate-800">
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-2">
+            <span>Harmonious 5-Color Celebration Palette</span>
           </h4>
-
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-            {overview.colorPalette.map((color, idx) => (
-              <div
-                key={idx}
-                onClick={() => copyToClipboard(color.hex)}
-                className="group relative p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-800/70 hover:shadow-md transition-all cursor-pointer text-center"
-              >
-                <div
-                  className="w-full h-14 rounded-lg shadow-inner mb-2 border border-black/5"
-                  style={{ backgroundColor: color.hex }}
-                />
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
-                  {color.name}
-                </div>
-                <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1 mt-0.5">
-                  <span>{color.hex}</span>
-                  {copiedHex === color.hex ? (
-                    <Check className="w-3 h-3 text-emerald-500" />
-                  ) : (
-                    <Copy className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+          <span className="text-[11px] text-slate-400">Click swatch to copy HEX code</span>
         </div>
-      )}
+
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          {(overview.colorPalette || []).map((swatch, idx) => (
+            <button
+              key={swatch.hex || idx}
+              onClick={() => copyToClipboard(swatch.hex)}
+              className="group p-3 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white/70 dark:bg-slate-800/70 hover:shadow-md transition-all text-left cursor-pointer"
+            >
+              <div
+                className="w-full h-14 rounded-lg shadow-inner mb-2.5 transition-transform group-hover:scale-105 relative flex items-center justify-center"
+                style={{ backgroundColor: swatch.hex }}
+              >
+                {copiedHex === swatch.hex && (
+                  <span className="p-1.5 rounded-full bg-black/60 text-white backdrop-blur-xs">
+                    <Check className="w-4 h-4" />
+                  </span>
+                )}
+              </div>
+              <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                {swatch.name}
+              </p>
+              <p className="text-[11px] font-mono text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                <span>{swatch.hex}</span>
+                <Copy className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </p>
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Key Highlights */}
       {overview.keyHighlights && overview.keyHighlights.length > 0 && (
         <div className="card-glass rounded-2xl p-6 border border-amber-200/60 dark:border-slate-800">
-          <h4 className="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-4 flex items-center gap-2">
+          <h4 className="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2">
             <BookmarkCheck className="w-4 h-4 text-emerald-600" />
-            <span>Key Event Signatures</span>
+            <span>Signature Celebration Pillars</span>
           </h4>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -115,10 +126,10 @@ export default function OverviewTab() {
                 key={idx}
                 className="flex items-start gap-3 p-3.5 rounded-xl bg-amber-50/50 dark:bg-slate-800/50 border border-amber-200/50 dark:border-slate-700/60"
               >
-                <span className="w-6 h-6 rounded-lg bg-amber-200 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                <span className="w-5 h-5 rounded-full bg-amber-200 text-amber-900 dark:bg-amber-900 dark:text-amber-200 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
                   {idx + 1}
                 </span>
-                <p className="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-200">
+                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-snug">
                   {highlight}
                 </p>
               </div>

@@ -1,16 +1,14 @@
 import React from 'react';
 import {
-  ShieldAlert,
   RotateCw,
   AlertTriangle,
-  Flame,
   CheckCircle2,
   BellRing
 } from 'lucide-react';
-import { useEvent } from '../../context/EventContext.jsx';
+import { useEvent } from '../../context/useEvent.js';
 
 export default function BackupPlanTab() {
-  const { plan, meta, regenerateSingleSection, regeneratingSection } = useEvent();
+  const { plan, regenerateSingleSection, regeneratingSection } = useEvent();
 
   if (!plan?.backupPlan) return null;
 

@@ -1,19 +1,12 @@
 import React from 'react';
-import {
-  Lightbulb,
-  RotateCw,
-  Sparkles,
-  Utensils,
-  Music,
-  Gift,
-  Gamepad2,
-  Flower2,
-  Wand2,
-  Flame
-} from 'lucide-react';
-import { useEvent } from '../../context/EventContext.jsx';
-import Card3D from '../Card3D.jsx';
+import { RotateCw, Music, Gift, Gamepad2, Flower2 } from 'lucide-react';
+import { useEvent } from '../../context/useEvent.js';
+import WowMomentsList from './ideas/WowMomentsList.jsx';
+import MenuCourseList from './ideas/MenuCourseList.jsx';
 
+/**
+ * Section 5: Personalized Ideas & 3 Unique Wow Moments
+ */
 export default function PersonalizedIdeasTab() {
   const { plan, meta, regenerateSingleSection, regeneratingSection } = useEvent();
 
@@ -48,93 +41,11 @@ export default function PersonalizedIdeasTab() {
         </button>
       </div>
 
-      {/* 3 UNIQUE "WOW MOMENTS" HERO FEATURE */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-rose-600 dark:text-rose-400">
-          <Sparkles className="w-4 h-4 animate-pulse" />
-          <span>3 Unique "Wow Moments" (Unforgettable Highlights)</span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {(personalizedIdeas.wowMoments || []).map((wow, idx) => (
-            <Card3D key={idx} depth={25} maxTilt={10}>
-              <div
-                className="relative overflow-hidden rounded-2xl p-6 bg-gradient-to-b from-amber-500/10 via-rose-500/5 to-purple-500/10 dark:from-amber-950/40 dark:via-rose-950/20 dark:to-purple-950/30 border border-amber-300/80 dark:border-rose-900/50 shadow-md flex flex-col justify-between h-full"
-              >
-                <div className="absolute top-0 right-0 w-24 h-24 bg-amber-400/10 rounded-full blur-xl pointer-events-none" />
-
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-600 to-rose-600 text-white flex items-center justify-center font-black text-xs shadow-sm">
-                      0{idx + 1}
-                    </span>
-                    <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-800">
-                      Wow Factor
-                    </span>
-                  </div>
-
-                  <h4 className="text-base font-extrabold text-slate-900 dark:text-white mb-2 leading-snug">
-                    {wow.title}
-                  </h4>
-
-                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
-                    {wow.description}
-                  </p>
-                </div>
-
-                {/* Execution Tip */}
-                <div className="p-3 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-amber-200/80 dark:border-slate-800 mt-2">
-                  <span className="block text-[10px] font-black uppercase tracking-wider text-amber-800 dark:text-amber-400 mb-0.5">
-                    💡 Planner Execution Tip
-                  </span>
-                  <p className="text-xs text-slate-600 dark:text-slate-300 italic">
-                    {wow.executionTip}
-                  </p>
-                </div>
-              </div>
-            </Card3D>
-          ))}
-        </div>
-      </div>
+      {/* 3 UNIQUE WOW MOMENTS HERO FEATURE */}
+      <WowMomentsList wowMoments={personalizedIdeas.wowMoments} />
 
       {/* CURATED MENU SECTION */}
-      {personalizedIdeas.menu && (
-        <div className="card-glass rounded-2xl p-6 border border-amber-200/60 dark:border-slate-800">
-          <div className="flex items-center justify-between mb-5">
-            <h4 className="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-2">
-              <Utensils className="w-4 h-4 text-amber-600" />
-              <span>Gastronomic Menu ({meta?.cuisineDiet || 'Custom'} Diet)</span>
-            </h4>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
-              {personalizedIdeas.menu.length} Courses
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {personalizedIdeas.menu.map((course, idx) => (
-              <div
-                key={idx}
-                className="p-4 rounded-xl bg-amber-50/40 dark:bg-slate-800/50 border border-amber-200/50 dark:border-slate-700/60"
-              >
-                <div className="font-extrabold text-xs uppercase tracking-wider text-amber-800 dark:text-amber-300 mb-3 pb-2 border-b border-amber-200 dark:border-slate-700">
-                  {course.course}
-                </div>
-                <ul className="space-y-2">
-                  {(course.items || []).map((item, iIdx) => (
-                    <li
-                      key={iIdx}
-                      className="text-xs text-slate-700 dark:text-slate-300 flex items-start gap-1.5"
-                    >
-                      <span className="text-amber-500 font-bold shrink-0">•</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <MenuCourseList menu={personalizedIdeas.menu} cuisineDiet={meta?.cuisineDiet} />
 
       {/* DECOR & ACTIVITIES GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
