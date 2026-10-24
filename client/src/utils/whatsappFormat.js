@@ -20,7 +20,7 @@ export function generateWhatsAppSummary(plan, meta = {}) {
 
   if (budget?.categories) {
     budget.categories.slice(0, 6).forEach(cat => {
-      lines.push(`• *${cat.category}:* ${symbol}${Number(cat.amount).toLocaleString()} (${cat.percentage}%)`);
+      lines.push(`• *${cat.name || cat.category}:* ${symbol}${Number(cat.amount).toLocaleString()} (${cat.percentage}%)`);
     });
     if (budget.categories.length > 6) {
       lines.push(`• _+${budget.categories.length - 6} other categories including 10% contingency buffer_`);

@@ -1,24 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  MessageSquareText,
-  X,
-  Send,
-  Sparkles,
-  Bot,
-  User,
-  RotateCcw,
-  Lightbulb
-} from 'lucide-react';
-import { useEvent } from '../context/EventContext.jsx';
+import { X, Send, Bot } from 'lucide-react';
+import { useEvent } from '../context/useEvent.js';
+import SuggestedPromptsBar from './chat/SuggestedPromptsBar.jsx';
+import ChatMessageItem from './chat/ChatMessageItem.jsx';
 
-const SUGGESTED_PROMPTS = [
-  'Reduce budget by 20%',
-  'Make it kid-friendly with fun games & treats',
-  'Add high-energy live music & DJ recommendations',
-  'Suggest eco-friendly seed paper favors',
-  'Include traditional folk dance & choreography'
-];
-
+/**
+ * "Ask the Planner" Conversational Assistant Drawer
+ * Context-aware event adjustments in natural language
+ */
 export default function ChatPlannerModal() {
   const { isChatOpen, setIsChatOpen, chatHistory, sendChatMessage } = useEvent();
   const [inputText, setInputText] = useState('');
@@ -92,101 +81,46 @@ export default function ChatPlannerModal() {
         </div>
 
         {/* Suggested Prompts Pills */}
-        <div className="px-4 py-2.5 bg-slate-50 dark:bg-slate-800/40 border-b border-slate-200/60 dark:border-slate-800 overflow-x-auto no-scrollbar flex items-center gap-2">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 shrink-0 flex items-center gap-1">
-            <Lightbulb className="w-3 h-3 text-amber-500" />
-            Try:
-          </span>
-          {SUGGESTED_PROMPTS.map((prompt, idx) => (
-            <button
-              key={idx}
-              onClick={() => handleSend(prompt)}
-              disabled={isSending}
-              className="text-[11px] px-2.5 py-1 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-amber-400 dark:hover:border-amber-500 hover:text-amber-700 dark:hover:text-amber-400 transition-all shrink-0 cursor-pointer disabled:opacity-50"
-            >
-              {prompt}
-            </button>
+        <SuggestedPromptsBar onSelectPrompt={handleSend} isSending={isSending} />
+
+        {/* Messages Stream */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+          {chatHistory.map((msg) => (
+            <ChatMessageItem key={msg.id} message={msg} />
           ))}
-        </div>
-
-        {/* Message Thread */}
-        <div className="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4">
-          {chatHistory.map((msg) => {
-            const isUser = msg.role === 'user';
-
-            return (
-              <div
-                key={msg.id}
-                className={`flex gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}
-              >
-                {!isUser && (
-                  <div className="w-8 h-8 rounded-xl bg-amber-100 dark:bg-slate-800 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5 border border-amber-200 dark:border-slate-700">
-                    <Bot className="w-4 h-4" />
-                  </div>
-                )}
-
-                <div
-                  className={`max-w-[85%] rounded-2xl p-3.5 text-xs sm:text-sm leading-relaxed ${
-                    isUser
-                      ? 'bg-gradient-to-r from-amber-600 to-rose-600 text-white rounded-tr-xs shadow-xs'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-xs border border-slate-200/60 dark:border-slate-700/60'
-                  }`}
-                >
-                  <p className="whitespace-pre-wrap">{msg.text}</p>
-                  <span
-                    className={`block text-[10px] mt-1 text-right ${
-                      isUser ? 'text-amber-100/80' : 'text-slate-400'
-                    }`}
-                  >
-                    {msg.timestamp}
-                  </span>
-                </div>
-
-                {isUser && (
-                  <div className="w-8 h-8 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center shrink-0 mt-0.5">
-                    <User className="w-4 h-4" />
-                  </div>
-                )}
-              </div>
-            );
-          })}
 
           {isSending && (
-            <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 animate-pulse">
-              <div className="w-8 h-8 rounded-xl bg-amber-100 dark:bg-slate-800 text-amber-600 flex items-center justify-center">
-                <Sparkles className="w-4 h-4 animate-spin" />
-              </div>
-              <span>Event planner is revising your plan and numbers...</span>
+            <div className="flex items-center gap-2 text-xs text-amber-700 dark:text-amber-400 animate-pulse p-2">
+              <Bot className="w-4 h-4" />
+              <span>Planner is thinking and recalibrating your plan...</span>
             </div>
           )}
 
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Bar */}
-        <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-          <div className="flex items-end gap-2 p-2 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 focus-within:ring-2 focus-within:ring-amber-500 focus-within:border-transparent transition-all">
-            <textarea
-              rows="2"
+        {/* Chat Input Field */}
+        <div className="p-4 border-t border-amber-200/60 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/80">
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              placeholder="e.g. Reduce budget by 20%, make it kid-friendly..."
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="e.g. Reduce catering budget by 15%, add a live saxophone entrance..."
               disabled={isSending}
-              className="w-full bg-transparent text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none resize-none px-2 py-1"
+              className="flex-1 input-glass rounded-xl px-4 py-3 text-xs sm:text-sm border-slate-300 dark:border-slate-700 focus:outline-hidden"
             />
+
             <button
               onClick={() => handleSend()}
               disabled={!inputText.trim() || isSending}
-              className="p-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-rose-600 text-white shadow-sm hover:scale-105 active:scale-95 disabled:opacity-40 disabled:hover:scale-100 transition-all cursor-pointer shrink-0"
+              className="p-3 rounded-xl bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-700 hover:to-rose-700 text-white shadow-sm disabled:opacity-50 transition-all cursor-pointer"
               aria-label="Send message"
             >
               <Send className="w-4 h-4" />
             </button>
           </div>
-          <p className="text-[10px] text-slate-400 text-center mt-2">
-            Tip: Press Enter to send • Plan updates automatically
-          </p>
         </div>
       </div>
     </div>
