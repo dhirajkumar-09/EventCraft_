@@ -1,9 +1,29 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, Crown, Gem, Music, ShieldCheck, Flame } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import EventCraftLogo from './EventCraftLogo.jsx';
+import {
+  Sparkles,
+  PieChart,
+  Calendar,
+  CheckSquare,
+  Lightbulb,
+  Clock,
+  ShieldAlert
+} from 'lucide-react';
+
+const REAL_MODULES = [
+  { id: 'overview', icon: Sparkles, label: 'Theme & Vibe', desc: 'Curated themes & color palettes' },
+  { id: 'budget', icon: PieChart, label: 'Strict Budget Math', desc: '100% balanced with 10% cushion' },
+  { id: 'timeline', icon: Calendar, label: 'Adaptive Timeline', desc: 'Custom countdown to event day' },
+  { id: 'vendors', icon: CheckSquare, label: 'Vendor Playbook', desc: 'Negotiation scripts & cost bands' },
+  { id: 'wow', icon: Lightbulb, label: '3 Wow Moments', desc: 'Unforgettable surprise elements' },
+  { id: 'runsheet', icon: Clock, label: 'Master Run Sheet', desc: 'Hour-by-hour operational cues' },
+  { id: 'backup', icon: ShieldAlert, label: 'Risk Contingencies', desc: 'Top 3 risks & mitigation plans' }
+];
 
 export default function Hero3DStage() {
   const containerRef = useRef(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [activeModule, setActiveModule] = useState(0);
 
   const handleMouseMove = (e) => {
     if (!containerRef.current) return;
@@ -17,122 +37,91 @@ export default function Hero3DStage() {
     setMousePos({ x: 0, y: 0 });
   };
 
+  const currentMod = REAL_MODULES[activeModule];
+  const Icon = currentMod.icon;
+
   return (
     <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full max-w-2xl mx-auto h-56 sm:h-64 my-6 flex items-center justify-center overflow-visible select-none"
+      className="relative w-full max-w-3xl mx-auto my-6 select-none"
       style={{ perspective: '1200px' }}
     >
-      {/* 3D Root Platform */}
+      {/* 3D Interactive Stage Container */}
       <div
-        className="relative w-full h-full flex items-center justify-center transition-transform duration-300 ease-out"
+        className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-b from-amber-500/10 via-rose-500/5 to-purple-600/10 dark:from-amber-950/30 dark:via-slate-900/40 dark:to-purple-950/30 border border-amber-300/60 dark:border-slate-800 shadow-2xl transition-transform duration-300 ease-out backdrop-blur-md overflow-hidden"
         style={{
           transformStyle: 'preserve-3d',
-          transform: `rotateX(${-mousePos.y * 14}deg) rotateY(${mousePos.x * 18}deg)`
+          transform: `rotateX(${-mousePos.y * 7}deg) rotateY(${mousePos.x * 9}deg)`
         }}
       >
-        {/* Glowing Base Platform Disc */}
-        <div
-          className="absolute w-64 h-64 sm:w-80 sm:h-80 rounded-full border-2 border-amber-400/40 dark:border-amber-500/30 bg-gradient-to-tr from-amber-500/10 via-rose-500/10 to-purple-600/10 dark:from-amber-600/20 dark:via-rose-900/20 dark:to-purple-900/20 blur-xs shadow-2xl shadow-amber-500/20"
-          style={{
-            transform: 'rotateX(75deg) translateZ(-40px)',
-            transformStyle: 'preserve-3d'
-          }}
-        />
+        {/* Subtle Ambient Radial Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-amber-500/15 via-rose-500/10 to-purple-600/15 rounded-full blur-3xl pointer-events-none -z-10" />
 
-        {/* 3D Golden Orbit Ring 1 (Rotates continuously) */}
-        <div
-          className="absolute w-52 h-52 sm:w-64 sm:h-64 rounded-full border-[2.5px] border-dashed border-amber-400/70 dark:border-amber-300/60 animate-[spin_18s_linear_infinite]"
-          style={{
-            transform: 'rotateX(65deg) rotateY(25deg)',
-            transformStyle: 'preserve-3d'
-          }}
-        />
-
-        {/* 3D Golden Orbit Ring 2 (Counter-rotates) */}
-        <div
-          className="absolute w-60 h-60 sm:w-72 sm:h-72 rounded-full border border-rose-400/50 dark:border-rose-300/40 animate-[spin_24s_linear_infinite_reverse]"
-          style={{
-            transform: 'rotateX(55deg) rotateY(-35deg)',
-            transformStyle: 'preserve-3d'
-          }}
-        />
-
-        {/* Central 3D Floating Celebration Crystal Sphere */}
-        <div
-          className="relative z-20 w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-tr from-amber-600 via-rose-500 to-purple-600 p-[2px] shadow-2xl shadow-amber-600/40 animate-pulse"
-          style={{
-            transform: 'translateZ(50px) rotateZ(12deg)',
-            transformStyle: 'preserve-3d'
-          }}
-        >
-          <div className="w-full h-full rounded-[22px] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md flex flex-col items-center justify-center p-2 text-center border border-amber-200/60 dark:border-slate-700">
-            <Sparkles className="w-8 h-8 text-amber-500 animate-bounce" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-800 dark:text-slate-100 mt-1">
-              EventCraft
-            </span>
-            <span className="text-[9px] font-bold text-amber-600 dark:text-amber-400">
-              3D AI Engine
-            </span>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Left: 3D Animated Logo Emblem with Rotating Golden Orbit Ring */}
+          <div className="relative flex items-center justify-center shrink-0 w-36 h-36 sm:w-40 sm:h-40">
+            {/* 3D Orbit Ring 1 */}
+            <div
+              className="absolute inset-0 rounded-full border-2 border-dashed border-amber-400/60 dark:border-amber-400/40 animate-[spin_16s_linear_infinite]"
+              style={{ transform: 'rotateX(60deg)' }}
+            />
+            {/* 3D Orbit Ring 2 */}
+            <div
+              className="absolute inset-2 rounded-full border border-rose-400/40 dark:border-rose-400/30 animate-[spin_22s_linear_infinite_reverse]"
+              style={{ transform: 'rotateY(60deg)' }}
+            />
+            {/* Glowing Center Logo Avatar */}
+            <div
+              className="relative z-10 transition-transform duration-300"
+              style={{
+                transform: `translateZ(30px) translateX(${mousePos.x * 6}px) translateY(${mousePos.y * 6}px)`,
+                transformStyle: 'preserve-3d'
+              }}
+            >
+              <EventCraftLogo size={74} />
+            </div>
           </div>
-        </div>
 
-        {/* 3D Floating Satellite Badge 1 (Top Left): 100% Budget */}
-        <div
-          className="absolute -top-1 sm:top-2 left-4 sm:left-12 px-3 py-1.5 rounded-2xl bg-white/90 dark:bg-slate-800/95 border border-emerald-300 dark:border-emerald-700 shadow-xl shadow-emerald-600/10 flex items-center gap-2 backdrop-blur-md transition-transform duration-300"
-          style={{
-            transform: `translateZ(65px) translateX(${mousePos.x * -12}px) translateY(${mousePos.y * -12}px)`,
-            transformStyle: 'preserve-3d'
-          }}
-        >
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-          <span className="text-xs font-black text-slate-900 dark:text-white">
-            100% Strict Budget Math
-          </span>
-        </div>
+          {/* Right: Active Real Module Display */}
+          <div className="flex-1 text-center md:text-left min-w-0">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-300 dark:border-amber-700/60 mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+              <span>Core Planning Pillar {activeModule + 1} of 7</span>
+            </div>
 
-        {/* 3D Floating Satellite Badge 2 (Top Right): 3 Wow Moments */}
-        <div
-          className="absolute -top-1 sm:top-2 right-4 sm:right-12 px-3 py-1.5 rounded-2xl bg-white/90 dark:bg-slate-800/95 border border-rose-300 dark:border-rose-700 shadow-xl shadow-rose-600/10 flex items-center gap-2 backdrop-blur-md transition-transform duration-300"
-          style={{
-            transform: `translateZ(75px) translateX(${mousePos.x * 14}px) translateY(${mousePos.y * -10}px)`,
-            transformStyle: 'preserve-3d'
-          }}
-        >
-          <Sparkles className="w-3.5 h-3.5 text-rose-500" />
-          <span className="text-xs font-black text-slate-900 dark:text-white">
-            3 Unique Wow Moments
-          </span>
-        </div>
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center justify-center md:justify-start gap-2">
+              <Icon className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
+              <span>{currentMod.label}</span>
+            </h3>
 
-        {/* 3D Floating Satellite Badge 3 (Bottom Left): Adaptive Countdown */}
-        <div
-          className="absolute bottom-2 sm:bottom-4 left-6 sm:left-16 px-3 py-1.5 rounded-2xl bg-white/90 dark:bg-slate-800/95 border border-amber-300 dark:border-amber-700 shadow-xl shadow-amber-600/10 flex items-center gap-2 backdrop-blur-md transition-transform duration-300"
-          style={{
-            transform: `translateZ(55px) translateX(${mousePos.x * -10}px) translateY(${mousePos.y * 14}px)`,
-            transformStyle: 'preserve-3d'
-          }}
-        >
-          <Crown className="w-3.5 h-3.5 text-amber-500" />
-          <span className="text-xs font-black text-slate-900 dark:text-white">
-            Adaptive T-Day Milestones
-          </span>
-        </div>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium mt-1">
+              {currentMod.desc}
+            </p>
 
-        {/* 3D Floating Satellite Badge 4 (Bottom Right): Verified PDF Export */}
-        <div
-          className="absolute bottom-2 sm:bottom-4 right-6 sm:right-16 px-3 py-1.5 rounded-2xl bg-white/90 dark:bg-slate-800/95 border border-purple-300 dark:border-purple-700 shadow-xl shadow-purple-600/10 flex items-center gap-2 backdrop-blur-md transition-transform duration-300"
-          style={{
-            transform: `translateZ(60px) translateX(${mousePos.x * 12}px) translateY(${mousePos.y * 12}px)`,
-            transformStyle: 'preserve-3d'
-          }}
-        >
-          <ShieldCheck className="w-3.5 h-3.5 text-purple-500" />
-          <span className="text-xs font-black text-slate-900 dark:text-white">
-            Structured PDF Export
-          </span>
+            {/* Interactive Module Indicator Pills */}
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5 mt-4">
+              {REAL_MODULES.map((mod, idx) => {
+                const isSelected = activeModule === idx;
+                const ModIcon = mod.icon;
+                return (
+                  <button
+                    key={mod.id}
+                    onClick={() => setActiveModule(idx)}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                      isSelected
+                        ? 'bg-gradient-to-r from-amber-600 to-rose-600 text-white shadow-sm scale-105'
+                        : 'bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-amber-400'
+                    }`}
+                  >
+                    <ModIcon className="w-3 h-3" />
+                    <span>{mod.label.split(' ')[0]}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Sparkles, RotateCw, Copy, Check, Heart, Compass, BookmarkCheck, FileDown } from 'lucide-react';
+import { Sparkles, RotateCw, Copy, Check, Heart, Compass, BookmarkCheck } from 'lucide-react';
 import { useEvent } from '../../context/EventContext.jsx';
 import Card3D from '../Card3D.jsx';
-import { exportStructuredPdf } from '../../utils/exportPdf.js';
 
 export default function OverviewTab() {
   const { plan, meta, regenerateSingleSection, regeneratingSection } = useEvent();
@@ -32,25 +31,14 @@ export default function OverviewTab() {
           </h3>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
-          <button
-            onClick={() => exportStructuredPdf(plan, meta)}
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-700 hover:to-rose-700 text-white shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-            title="Download full structured celebration plan as PDF"
-          >
-            <FileDown className="w-3.5 h-3.5" />
-            <span>Download Structured PDF</span>
-          </button>
-
-          <button
-            onClick={() => regenerateSingleSection('overview')}
-            disabled={isRegenerating}
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-slate-700 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-slate-700 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 cursor-pointer shadow-xs"
-          >
-            <RotateCw className={`w-3.5 h-3.5 ${isRegenerating ? 'animate-spin text-amber-600' : ''}`} />
-            <span>{isRegenerating ? 'Regenerating Overview...' : 'Regenerate Overview'}</span>
-          </button>
-        </div>
+        <button
+          onClick={() => regenerateSingleSection('overview')}
+          disabled={isRegenerating}
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-slate-700 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-slate-700 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 cursor-pointer shadow-xs self-start sm:self-auto"
+        >
+          <RotateCw className={`w-3.5 h-3.5 ${isRegenerating ? 'animate-spin text-amber-600' : ''}`} />
+          <span>{isRegenerating ? 'Regenerating Overview...' : 'Regenerate Overview'}</span>
+        </button>
       </div>
 
       {/* Suggested Theme Showcase Card with 3D Depth */}

@@ -51,20 +51,21 @@ const CURRENCIES = [
 export default function EventForm({ presetData, onClearPreset }) {
   const { generatePlan, isLoading } = useEvent();
 
+  // Clean empty state by default so any user can enter their own event details
   const [formData, setFormData] = useState({
-    eventType: 'Wedding',
-    eventDate: getFutureDate(60),
-    city: 'Jaipur',
-    venueType: 'banquet',
-    guestCount: 200,
-    totalBudget: 1200000,
+    eventType: '',
+    eventDate: '',
+    city: '',
+    venueType: '',
+    guestCount: '',
+    totalBudget: '',
     currency: 'INR',
     currencySymbol: '₹',
-    cuisineDiet: 'veg',
-    themePreference: 'Royal Rajputana Heritage with Marigold & Gilded Brass',
-    traditions: 'Traditional North Indian Vivah with Sangeet & Haldi',
-    ageGroup: 'Multi-generational (families, elders & young guests)',
-    specialRequests: 'Include live chaat counter, cold-pyro grand entrance, and acoustic sitar arrival.'
+    cuisineDiet: '',
+    themePreference: '',
+    traditions: '',
+    ageGroup: '',
+    specialRequests: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -194,6 +195,28 @@ export default function EventForm({ presetData, onClearPreset }) {
     setErrors({});
   };
 
+  const handleClearForm = () => {
+    setFormData({
+      eventType: '',
+      eventDate: '',
+      city: '',
+      venueType: '',
+      guestCount: '',
+      totalBudget: '',
+      currency: 'INR',
+      currencySymbol: '₹',
+      cuisineDiet: '',
+      themePreference: '',
+      traditions: '',
+      ageGroup: '',
+      specialRequests: ''
+    });
+    setErrors({});
+    setTouched({});
+  };
+
+  const hasEnteredData = Object.values(formData).some((v) => v !== '' && v !== 'INR' && v !== '₹');
+
   return (
     <div className="card-glass rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl shadow-amber-500/5 mb-12">
       {/* Form Header */}
@@ -207,15 +230,27 @@ export default function EventForm({ presetData, onClearPreset }) {
           </p>
         </div>
 
-        {/* Fill Sample Data Button */}
-        <button
-          type="button"
-          onClick={loadRandomSample}
-          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-50 hover:bg-amber-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-700 transition-all hover:scale-[1.02] active:scale-[0.98] shrink-0"
-        >
-          <RotateCcw className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-          <span>Fill Random Sample Data</span>
-        </button>
+        {/* Actions Bar */}
+        <div className="flex items-center gap-2 shrink-0">
+          {hasEnteredData && (
+            <button
+              type="button"
+              onClick={handleClearForm}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-800 transition-all cursor-pointer"
+            >
+              <span>Clear Form</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={loadRandomSample}
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-50 hover:bg-amber-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-700 transition-all hover:scale-[1.02] active:scale-[0.98] shrink-0 cursor-pointer"
+          >
+            <RotateCcw className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+            <span>Fill Sample Data</span>
+          </button>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-6">
@@ -235,6 +270,7 @@ export default function EventForm({ presetData, onClearPreset }) {
               aria-required="true"
               className="w-full px-4 py-3 rounded-xl border bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-amber-500 focus:outline-none transition-all text-sm font-medium"
             >
+              <option value="">-- Choose Celebration Type (e.g. Wedding, Birthday...) --</option>
               {EVENT_TYPES.map((type) => (
                 <option key={type} value={type}>
                   {type}
@@ -331,6 +367,7 @@ export default function EventForm({ presetData, onClearPreset }) {
               aria-required="true"
               className="w-full px-4 py-3 rounded-xl border bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-amber-500 focus:outline-none transition-all text-sm font-medium"
             >
+              <option value="">-- Choose Venue Setting (Banquet, Outdoor, Home...) --</option>
               {VENUE_TYPES.map((v) => (
                 <option key={v.value} value={v.value}>
                   {v.label}
@@ -363,6 +400,7 @@ export default function EventForm({ presetData, onClearPreset }) {
                 value={formData.guestCount}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                placeholder="e.g. 150"
                 aria-required="true"
                 className="w-full pl-10 pr-4 py-3 rounded-xl border bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-amber-500 focus:outline-none transition-all text-sm font-medium"
               />
@@ -406,6 +444,7 @@ export default function EventForm({ presetData, onClearPreset }) {
                   value={formData.totalBudget}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  placeholder="e.g. 1000000"
                   aria-required="true"
                   className="w-full pl-9 pr-4 py-3 rounded-xl border bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-amber-500 focus:outline-none transition-all text-sm font-semibold"
                 />
