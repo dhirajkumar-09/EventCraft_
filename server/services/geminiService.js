@@ -11,12 +11,13 @@ import { generateMockEventPlan } from './mockPlanService.js';
 
 const SYSTEM_PROMPT = `You are an expert event planner with 15 years of experience in Indian and global celebrations. Give realistic, locally relevant pricing for the given city, respect the budget strictly, be culturally sensitive, and return only valid JSON matching the schema.`;
 
-const CANDIDATE_MODELS = ['gemini-2.5-flash', 'gemini-3.8-flash', 'gemini-flash-latest'];
+// gemini-3.5-flash generates high-fidelity structured event plans; gemini-flash-lite-latest provides ultra-low latency fallback
+const CANDIDATE_MODELS = ['gemini-3.5-flash', 'gemini-flash-lite-latest'];
 
 /**
  * Wraps a promise with a timeout
  */
-function withTimeout(promise, ms = 3500) {
+function withTimeout(promise, ms = 45000) {
   let timer;
   const timeoutPromise = new Promise((_, reject) => {
     timer = setTimeout(() => reject(new Error(`API call timed out after ${ms}ms`)), ms);
@@ -112,7 +113,7 @@ STRICT REQUIREMENTS:
             temperature: 0.7
           }
         }),
-        6000
+        45000
       );
 
       const rawText = response.text;
@@ -188,7 +189,7 @@ Return JSON with key "${sectionKey}".
             temperature: 0.8
           }
         }),
-        5000
+        25000
       );
 
       const parsed = extractAndParseJson(response.text);
@@ -265,7 +266,7 @@ Instructions:
             temperature: 0.7
           }
         }),
-        5000
+        30000
       );
 
       const parsed = extractAndParseJson(response.text);

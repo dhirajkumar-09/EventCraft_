@@ -1,6 +1,6 @@
 # ✨ EventCraft AI — GenAI Celebration & Event Planner
 
-> A production-quality, full-stack GenAI web application powered by **Google Gemini 2.5 Flash** with structured JSON output, designed to architect memorable Indian and global celebrations — from opulent weddings and milestone birthdays to community festivals and corporate galas.
+> A production-quality, full-stack GenAI web application powered by **Google Gemini API** (`gemini-3.5-flash` with structured JSON output and `gemini-flash-lite-latest` low-latency fallback), designed to architect memorable Indian and global celebrations — from opulent weddings and milestone birthdays to community festivals and corporate galas.
 
 ---
 
@@ -42,7 +42,7 @@ flowchart TD
         RateLimiter --> Sanitizer["Sanitization & Injection Guard"]
         Sanitizer --> Controller["Plan Controller"]
         
-        Controller --> GeminiService["Gemini 2.5 Flash Service"]
+        Controller --> GeminiService["Gemini AI Service\n(gemini-3.5-flash / flash-lite)"]
         Controller --> MockService["Intelligent Planner Engine (Fallback)"]
         
         GeminiService --> BudgetMath["Budget Math Normalizer\n(Strict Equality & 10% Contingency)"]
@@ -50,7 +50,7 @@ flowchart TD
     end
 
     subgraph GoogleAI["Google Cloud AI"]
-        GeminiService -->|Structured JSON Schema| GeminiAPI["✨ Google Gemini API (gemini-2.5-flash)"]
+        GeminiService -->|Structured JSON Schema| GeminiAPI["✨ Google Gemini API (gemini-3.5-flash)"]
     end
 ```
 
@@ -60,10 +60,10 @@ flowchart TD
 
 | Layer | Technologies |
 |---|---|
-| **Frontend** | React 19, Vite 8, Tailwind CSS v4, Lucide Icons, Canvas Confetti |
+| **Frontend** | React 19, Vite 8, Tailwind CSS v4, Lucide Icons, Canvas Confetti, jsPDF + AutoTable |
 | **Backend** | Node.js (v24+), Express 4, CORS, Dotenv, Express-Rate-Limit |
-| **AI Model** | Google Gemini API (`gemini-2.5-flash`) with structured JSON schema (`responseMimeType: "application/json"`) |
-| **Testing** | Node.js native test runner (`node:test`, `node:assert/strict`) — 12 passing tests |
+| **AI Model** | Google Gemini API (`gemini-3.5-flash` primary, `gemini-flash-lite-latest` fast-fallback) with structured JSON schema (`responseMimeType: "application/json"`) |
+| **Testing** | Node.js native test runner (`node:test`, `node:assert/strict`) — 13 passing unit and integration tests |
 | **State & Storage** | React Context API, Web Storage (`localStorage`) |
 
 ---
