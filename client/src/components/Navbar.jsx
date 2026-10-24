@@ -55,16 +55,23 @@ export default function Navbar({ onOpenExport, onOpenApiKey }) {
             </button>
           )}
 
-          {/* Theme Switcher */}
+          {/* Day / Night Theme Switcher */}
           <button
             onClick={toggleTheme}
-            aria-label="Toggle Dark/Light Mode"
-            className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-colors"
+            aria-label={`Switch to ${themeMode === 'dark' ? 'Light (Day)' : 'Dark (Night)'} mode`}
+            title={`Switch to ${themeMode === 'dark' ? 'Light (Day)' : 'Dark (Night)'} mode`}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 border border-slate-300 dark:border-slate-700 transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer shadow-xs"
           >
             {themeMode === 'dark' ? (
-              <Sun className="w-4 h-4 text-amber-400" />
+              <>
+                <Sun className="w-4 h-4 text-amber-400" />
+                <span>Day</span>
+              </>
             ) : (
-              <Moon className="w-4 h-4 text-slate-600" />
+              <>
+                <Moon className="w-4 h-4 text-indigo-600" />
+                <span>Night</span>
+              </>
             )}
           </button>
         </div>

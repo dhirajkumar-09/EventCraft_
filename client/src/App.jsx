@@ -73,7 +73,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fffdfa] dark:bg-[#0f1016] text-slate-800 dark:text-slate-100 transition-colors">
+    <div className="min-h-screen flex flex-col bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-300">
       {/* Top Navbar */}
       <Navbar
         onOpenExport={() => setIsExportOpen(true)}

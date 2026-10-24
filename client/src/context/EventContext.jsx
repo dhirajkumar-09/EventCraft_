@@ -22,9 +22,14 @@ const LOADING_QUOTES = [
 ];
 
 export function EventProvider({ children }) {
-  // Theme state
+  // Theme state (respects saved preference or system preference)
   const [themeMode, setThemeMode] = useState(() => {
-    return localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
+    const saved = localStorage.getItem(STORAGE_KEYS.THEME);
+    if (saved === 'dark' || saved === 'light') return saved;
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
   });
 
   // Plan & Meta state
@@ -80,13 +85,18 @@ export function EventProvider({ children }) {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [serverStatus, setServerStatus] = useState(null);
 
-  // Sync theme with document element
+  // Sync theme with document element and body
   useEffect(() => {
     const root = document.documentElement;
+    const body = document.body;
     if (themeMode === 'dark') {
       root.classList.add('dark');
+      body.classList.add('dark');
+      root.style.colorScheme = 'dark';
     } else {
       root.classList.remove('dark');
+      body.classList.remove('dark');
+      root.style.colorScheme = 'light';
     }
     localStorage.setItem(STORAGE_KEYS.THEME, themeMode);
   }, [themeMode]);

@@ -1,18 +1,22 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --bg-primary: #fffdfa;
     --bg-secondary: #fef8ee;
     --card-bg: rgba(255, 255, 255, 0.95);
     --border-color: #f1e4d3;
-    --text-primary: #2d1810;
-    --text-secondary: #745b4c;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
     --accent-gold: #d97706;
     --accent-rose: #e11d48;
     --accent-emerald: #059669;
   }
 
+  html.dark,
+  :root.dark,
   .dark {
     --bg-primary: #0f1016;
     --bg-secondary: #171822;
@@ -25,12 +29,26 @@
     --accent-emerald: #10b981;
   }
 
+  html {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    color-scheme: light;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  html.dark {
+    background-color: #0f1016;
+    color: #f8fafc;
+    color-scheme: dark;
+  }
+
   body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.25s ease, color 0.25s ease;
     overflow-x: hidden;
+    min-height: 100vh;
   }
 }
 
@@ -45,7 +63,8 @@
   -webkit-text-fill-color: transparent;
 }
 
-.dark .festive-gradient-text {
+.dark .festive-gradient-text,
+html.dark .festive-gradient-text {
   background: linear-gradient(135deg, #fbbf24 0%, #fb7185 50%, #c084fc 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -86,7 +105,8 @@
   animation: shimmer 2s infinite;
 }
 
-.dark .animate-shimmer::after {
+.dark .animate-shimmer::after,
+html.dark .animate-shimmer::after {
   background-image: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0,

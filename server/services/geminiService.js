@@ -1,7 +1,7 @@
 /**
  * Gemini Service for EventCraft AI
- * Interacts with gemini-2.5-flash using structured JSON output
- * Includes automatic retry, schema validation, prompt-injection defense, and fallback.
+ * Interacts with gemini-2.5-flash (and candidate models) using structured JSON output
+ * Includes automatic retry, timeout protection, schema validation, prompt-injection defense, and fallback.
  */
 
 import { GoogleGenAI } from '@google/genai';
@@ -10,6 +10,19 @@ import { validateAndNormalizeBudget } from '../utils/budgetValidator.js';
 import { generateMockEventPlan } from './mockPlanService.js';
 
 const SYSTEM_PROMPT = `You are an expert event planner with 15 years of experience in Indian and global celebrations. Give realistic, locally relevant pricing for the given city, respect the budget strictly, be culturally sensitive, and return only valid JSON matching the schema.`;
+
+const CANDIDATE_MODELS = ['gemini-2.5-flash', 'gemini-3.8-flash', 'gemini-flash-latest'];
+
+/**
+ * Wraps a promise with a timeout
+ */
+function withTimeout(promise, ms = 3500) {
+  let timer;
+  const timeoutPromise = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`API call timed out after ${ms}ms`)), ms);
+  });
+  return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timer));
+}
 
 /**
  * Strips code fences and attempts to parse JSON safely
@@ -83,21 +96,24 @@ STRICT REQUIREMENTS:
 6. Provide valid JSON strictly conforming to the requested schema.
 `;
 
-  // Attempt up to 2 times
   let lastError = null;
-  for (let attempt = 1; attempt <= 2; attempt++) {
+
+  for (const modelName of CANDIDATE_MODELS) {
     try {
-      console.log(`[EventCraft AI] Requesting gemini-2.5-flash (attempt ${attempt})...`);
-      const response = await client.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
-        config: {
-          systemInstruction: SYSTEM_PROMPT,
-          responseMimeType: 'application/json',
-          responseSchema: eventPlanJsonSchema,
-          temperature: 0.7
-        }
-      });
+      console.log(`[EventCraft AI] Querying Google GenAI model '${modelName}'...`);
+      const response = await withTimeout(
+        client.models.generateContent({
+          model: modelName,
+          contents: prompt,
+          config: {
+            systemInstruction: SYSTEM_PROMPT,
+            responseMimeType: 'application/json',
+            responseSchema: eventPlanJsonSchema,
+            temperature: 0.7
+          }
+        }),
+        6000
+      );
 
       const rawText = response.text;
       const parsedPlan = extractAndParseJson(rawText);
@@ -116,14 +132,15 @@ STRICT REQUIREMENTS:
         parsedPlan.budget.currencySymbol = normalized.currencySymbol;
       }
 
+      console.log(`[EventCraft AI] Successfully generated plan with model '${modelName}'!`);
       return parsedPlan;
     } catch (err) {
-      console.warn(`[EventCraft AI] Attempt ${attempt} failed: ${err.message}`);
+      console.warn(`[EventCraft AI] Model '${modelName}' attempt failed: ${err.message}`);
       lastError = err;
     }
   }
 
-  console.warn('[EventCraft AI] Gemini generation encountered an error; falling back to intelligent planner engine:', lastError?.message);
+  console.warn('[EventCraft AI] Falling back to intelligent planner engine:', lastError?.message);
   return generateMockEventPlan(input);
 }
 
@@ -150,45 +167,49 @@ Conform strictly to the JSON schema definition for '${sectionKey}'.
 Return JSON with key "${sectionKey}".
 `;
 
-  try {
-    const sectionSchema = {
-      type: "object",
-      properties: {
-        [sectionKey]: eventPlanJsonSchema.properties[sectionKey]
-      },
-      required: [sectionKey]
-    };
+  const sectionSchema = {
+    type: "object",
+    properties: {
+      [sectionKey]: eventPlanJsonSchema.properties[sectionKey]
+    },
+    required: [sectionKey]
+  };
 
-    const response = await client.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        systemInstruction: SYSTEM_PROMPT,
-        responseMimeType: 'application/json',
-        responseSchema: sectionSchema,
-        temperature: 0.8
-      }
-    });
+  for (const modelName of CANDIDATE_MODELS) {
+    try {
+      const response = await withTimeout(
+        client.models.generateContent({
+          model: modelName,
+          contents: prompt,
+          config: {
+            systemInstruction: SYSTEM_PROMPT,
+            responseMimeType: 'application/json',
+            responseSchema: sectionSchema,
+            temperature: 0.8
+          }
+        }),
+        5000
+      );
 
-    const parsed = extractAndParseJson(response.text);
-    if (parsed && parsed[sectionKey]) {
-      if (sectionKey === 'budget' && parsed.budget.categories) {
-        const normalized = validateAndNormalizeBudget(
-          parsed.budget.categories,
-          input.totalBudget,
-          input.currency,
-          input.currencySymbol
-        );
-        parsed.budget.categories = normalized.categories;
-        parsed.budget.totalBudget = normalized.totalBudget;
+      const parsed = extractAndParseJson(response.text);
+      if (parsed && parsed[sectionKey]) {
+        if (sectionKey === 'budget' && parsed.budget.categories) {
+          const normalized = validateAndNormalizeBudget(
+            parsed.budget.categories,
+            input.totalBudget,
+            input.currency,
+            input.currencySymbol
+          );
+          parsed.budget.categories = normalized.categories;
+          parsed.budget.totalBudget = normalized.totalBudget;
+        }
+        return parsed[sectionKey];
       }
-      return parsed[sectionKey];
+    } catch (err) {
+      console.warn(`[EventCraft AI] Regenerate section failed on ${modelName}:`, err.message);
     }
-  } catch (err) {
-    console.warn(`[EventCraft AI] Failed to regenerate section '${sectionKey}' with Gemini:`, err.message);
   }
 
-  // Fallback
   const fresh = generateMockEventPlan(input);
   return fresh[sectionKey] || currentPlan[sectionKey];
 }
@@ -200,7 +221,6 @@ export async function chatWithPlanner(userMessage, currentPlan, chatHistory = []
   const client = getClient(input?.apiKey);
 
   if (!client) {
-    // Intelligent heuristic update for offline/demo mode
     return handleOfflineChat(userMessage, currentPlan, input);
   }
 
@@ -232,34 +252,40 @@ Instructions:
 3. Ensure budget categories still sum strictly to the total budget and maintain the 10% contingency.
 `;
 
-  try {
-    const response = await client.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        systemInstruction: SYSTEM_PROMPT,
-        responseMimeType: 'application/json',
-        responseSchema: chatSchema,
-        temperature: 0.7
-      }
-    });
-
-    const parsed = extractAndParseJson(response.text);
-    if (parsed.updatedPlan && parsed.updatedPlan.budget) {
-      const normalized = validateAndNormalizeBudget(
-        parsed.updatedPlan.budget.categories,
-        parsed.updatedPlan.budget.totalBudget || input.totalBudget,
-        input.currency,
-        input.currencySymbol
+  for (const modelName of CANDIDATE_MODELS) {
+    try {
+      const response = await withTimeout(
+        client.models.generateContent({
+          model: modelName,
+          contents: prompt,
+          config: {
+            systemInstruction: SYSTEM_PROMPT,
+            responseMimeType: 'application/json',
+            responseSchema: chatSchema,
+            temperature: 0.7
+          }
+        }),
+        5000
       );
-      parsed.updatedPlan.budget.categories = normalized.categories;
-    }
 
-    return parsed;
-  } catch (err) {
-    console.warn('[EventCraft AI] Chat error with Gemini:', err.message);
-    return handleOfflineChat(userMessage, currentPlan, input);
+      const parsed = extractAndParseJson(response.text);
+      if (parsed.updatedPlan && parsed.updatedPlan.budget) {
+        const normalized = validateAndNormalizeBudget(
+          parsed.updatedPlan.budget.categories,
+          parsed.updatedPlan.budget.totalBudget || input.totalBudget,
+          input.currency,
+          input.currencySymbol
+        );
+        parsed.updatedPlan.budget.categories = normalized.categories;
+      }
+
+      return parsed;
+    } catch (err) {
+      console.warn(`[EventCraft AI] Chat failed on ${modelName}:`, err.message);
+    }
   }
+
+  return handleOfflineChat(userMessage, currentPlan, input);
 }
 
 /**
@@ -302,7 +328,6 @@ function handleOfflineChat(userMessage, currentPlan, input) {
     );
     reply = `Got it! I've amped up the entertainment and music itinerary with a tailored playlist segment featuring your family's favorite tracks and high-energy celebration anthems.`;
   } else {
-    // General pleasant response
     reply = `I have updated your plan notes to address: "${userMessage}". The timeline, vendor negotiation points, and personalized touches have been aligned with your vision!`;
   }
 
