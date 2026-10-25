@@ -31,3 +31,15 @@ export function usePersistentState(key, initialValue) {
 
   return [state, setState];
 }
+
+/**
+ * Safely removes a list of keys from window.localStorage
+ * @param {Array<string>} keys - Array of localStorage keys to remove
+ */
+export function removeStorageItems(keys) {
+  try {
+    keys.forEach((key) => localStorage.removeItem(key));
+  } catch {
+    // Graceful fallback if storage unavailable
+  }
+}

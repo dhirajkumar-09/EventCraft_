@@ -8,7 +8,7 @@ import {
 } from '../config/constants.js';
 import { calculatePlanProgress } from '../utils/progressCalculator.js';
 import { fetchServerStatusApi } from '../services/apiService.js';
-import { usePersistentState } from '../hooks/usePersistentState.js';
+import { usePersistentState, removeStorageItems } from '../hooks/usePersistentState.js';
 import { useThemeMode } from '../hooks/useThemeMode.js';
 import { usePlanManager } from '../hooks/usePlanManager.js';
 import { EventContext } from './useEvent.js';
@@ -100,14 +100,12 @@ export function EventProvider({ children }) {
     setCheckedItems({});
     setChatHistory([]);
     setError(null);
-    try {
-      localStorage.removeItem(STORAGE_KEYS.PLAN);
-      localStorage.removeItem(STORAGE_KEYS.META);
-      localStorage.removeItem(STORAGE_KEYS.CHECKED);
-      localStorage.removeItem(STORAGE_KEYS.CHAT);
-    } catch {
-      // Graceful fallback in environments with restricted localStorage
-    }
+    removeStorageItems([
+      STORAGE_KEYS.PLAN,
+      STORAGE_KEYS.META,
+      STORAGE_KEYS.CHECKED,
+      STORAGE_KEYS.CHAT
+    ]);
   }, [setPlan, setMeta, setCheckedItems, setChatHistory, setError]);
 
   const saveCustomApiKey = useCallback((key) => {
